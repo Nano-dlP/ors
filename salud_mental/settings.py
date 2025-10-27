@@ -2,68 +2,67 @@
 Django settings for salud_mental project.
 
 Notas de cambios:
-- Se añadió import os (se estaba usando más abajo sin importar).
-- Lectura de secrets_casa.json envuelta para no romper si el archivo no existe.
-- get_secret ahora busca en el dict de secrets y como fallback en variables de entorno.
-- Revisa y provee SECRET_KEY y demás claves sensibles en producción.
+- Se reemplaza la carga desde secrets_casa.json por .env usando python-dotenv.
+- Se añade helper get_env para leer/castear y validar variables de entorno.
+- SECRET_KEY es obligatorio y lanzará ImproperlyConfigured si falta.
+- DEBUG por defecto False (más seguro); se puede activar vía .env en desarrollo.
+- ALLOWED_HOSTS se lee desde ALLOWED_HOSTS (comas) en .env; en producción no puede quedar vacío.
+- Ajustes de EMAIL, DATABASES y CACHES ahora usan variables de entorno.
 """
 
 from django.core.exceptions import ImproperlyConfigured
-import json
 import os
 from pathlib import Path
+
+# Opcional: python-dotenv (instalar con pip install python-dotenv)
+try:
+    from dotenv import load_dotenv
+except Exception:
+    load_dotenv = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Cargar secrets desde un archivo JSON (opcional) sin romper si no existe.
-secrets_path = BASE_DIR / 'secrets_casa.json'
-if secrets_path.exists():
-    try:
-        with open(secrets_path, 'r', encoding='utf-8') as f:
-            secrets = json.load(f)
-    except Exception as e:
-        # Si el archivo existe pero falla la lectura, lanzamos excepción clara
-        raise ImproperlyConfigured(f"Error leyendo {secrets_path}: {e}")
-else:
-    # Si no existe el archivo, usamos un dict vacío y permitimos fallback a env vars
-    secrets = {}
+# Cargar .env si python-dotenv está disponible y existe el archivo
+DOTENV_PATH = BASE_DIR / '.env'
+if load_dotenv:
+    # load_dotenv acepta Path objects en versiones recientes
+    load_dotenv(dotenv_path=DOTENV_PATH, override=False)
 
-def get_secret(setting, secrets=secrets):
+def get_env(name, default=None, required=False, cast=None):
     """
-    Obtiene la clave del diccionario `secrets` o, si no está, la busca en las
-    variables de entorno. Si no existe en ninguno, lanza ImproperlyConfigured.
-
-    Esto permite ejecutar comandos de mantenimiento (collectstatic, etc.) si
-    se definen variables de entorno en vez del archivo secrets_json.
+    Lee una variable de entorno, permite casting y valida presencia si required=True.
+    - name: nombre de la variable de entorno.
+    - default: valor por defecto si no existe.
+    - required: si True, lanza ImproperlyConfigured cuando no existe o está vacío.
+    - cast: función para convertir el string (ej. int, lambda x: x.lower() in (...))
     """
-    # 1) intentar desde el archivo secrets (si existe)
-    if setting in secrets:
-        return secrets[setting]
-    # 2) fallback a variable de entorno
-    env_val = os.environ.get(setting)
-    if env_val is not None:
-        return env_val
-    # 3) no existe: error explícito
-    raise ImproperlyConfigured(f"Set the {setting} environment variable or include it in {secrets_path}")
+    val = os.environ.get(name, default)
+    if required and (val is None or str(val) == ''):
+        raise ImproperlyConfigured(f"Falta la variable de entorno {name}. Añadila en {DOTENV_PATH} o configúrala en el entorno.")
+    if cast is not None and val is not None and val != '':
+        try:
+            return cast(val)
+        except Exception as e:
+            raise ImproperlyConfigured(f"Error casteando la variable {name}: {e}")
+    return val
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Secret obligatorio: si falta lanzamos excepción para forzar su provisión.
-SECRET_KEY = get_secret('SECRET_KEY')
+SECRET_KEY = get_env('SECRET_KEY', required=True)
 
-# DEBUG: conviene configurar vía variable de entorno en producción
-DEBUG = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+# DEBUG: por seguridad usar False por defecto. Activar con DEBUG=1|true|yes en .env localmente.
+DEBUG = get_env('DEBUG', default='False', cast=lambda v: str(v).strip().lower() in ('1', 'true', 'yes'))
 
-# Allowed hosts: puede venir de secrets o env var (ej: "example.com,api.example.com")
-allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
-if allowed_hosts_env:
-    ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
+# Allowed hosts: ALLOWED_HOSTS="example.com,api.example.com"
+_allowed_hosts_env = get_env('ALLOWED_HOSTS', default='')
+if _allowed_hosts_env:
+    ALLOWED_HOSTS = [h.strip() for h in str(_allowed_hosts_env).split(',') if h.strip()]
 else:
-    # Intenta leer desde secrets si existe la clave
-    try:
-        ALLOWED_HOSTS = get_secret('ALLOWED_HOSTS').split(',') if get_secret('ALLOWED_HOSTS') else []
-    except ImproperlyConfigured:
-        ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = []
+
+# En producción no permitimos ALLOWED_HOSTS vacío
+if not DEBUG and not ALLOWED_HOSTS:
+    raise ImproperlyConfigured("ALLOWED_HOSTS no puede estar vacío en modo producción. Define ALLOWED_HOSTS en el .env o en el entorno.")
 
 # Application definition
 
@@ -75,7 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'widget_tweaks',  # Para ajustar renderizado de formularios en templates
+    'widget_tweaks',
 
     # Apps de la aplicación (ajusta/añade según tu proyecto)
     'core',
@@ -100,41 +99,38 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": os.environ.get("REDIS_LOCATION", "redis://127.0.0.1:6379/1"),
+            "LOCATION": get_env("REDIS_LOCATION", default="redis://127.0.0.1:6379/1"),
             "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
         }
     }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # Manejo de sesiones
-    'usuario.middleware.block_ip_middleware.BlockIPMiddleware',  # Bloqueo por IP (si usas)
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'usuario.middleware.block_ip_middleware.BlockIPMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_session_timeout.middleware.SessionTimeoutMiddleware',  # Timeout de sesión
-
-    # Middleware personalizado (se puede desactivar si impacta performance)
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'core.middleware.RegistrarClienteMiddleware',
 ]
 
 # Configuración de expirado de sesión (usa django-session-timeout)
-SESSION_EXPIRE_SECONDS = int(os.environ.get('SESSION_EXPIRE_SECONDS', 60))  # segundos
+SESSION_EXPIRE_SECONDS = int(get_env('SESSION_EXPIRE_SECONDS', default=60))
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = int(os.environ.get('SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD', 60))
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = int(get_env('SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD', default=60))
 SESSION_TIMEOUT_REDIRECT = 'core:login'
 
-SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', 3600))  # 1 hora por defecto
+SESSION_COOKIE_AGE = int(get_env('SESSION_COOKIE_AGE', default=3600))
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-# Parámetros bloqueo por IP (valores por defecto; puedes sobreescribir con env vars)
-IP_BLOCK_ATTEMPT_LIMIT = int(os.environ.get('IP_BLOCK_ATTEMPT_LIMIT', 3))
-IP_BLOCK_ATTEMPT_WINDOW = int(os.environ.get('IP_BLOCK_ATTEMPT_WINDOW', 5 * 60))
-IP_BLOCK_TIME = int(os.environ.get('IP_BLOCK_TIME', 60 * 15))
+IP_BLOCK_ATTEMPT_LIMIT = int(get_env('IP_BLOCK_ATTEMPT_LIMIT', default=3))
+IP_BLOCK_ATTEMPT_WINDOW = int(get_env('IP_BLOCK_ATTEMPT_WINDOW', default=5 * 60))
+IP_BLOCK_TIME = int(get_env('IP_BLOCK_TIME', default=60 * 15))
 
 ROOT_URLCONF = 'salud_mental.urls'
 
@@ -156,18 +152,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'salud_mental.wsgi.application'
 
-# Database: se esperan valores en secrets o variables de entorno.
-# Nota: Django acepta strings para PORT, pero puedes castear a int si prefieres.
+# Database: se esperan valores en variables de entorno (.env)
 DATABASES = {
     "default": {
-        "ENGINE": get_secret('ENGINE'),
-        "NAME": get_secret('NAME'),
-        "USER": get_secret('USER'),
-        "PASSWORD": get_secret('PASSWORD'),
-        "HOST": get_secret('HOST'),
-        "PORT": get_secret('PORT'),
+        "ENGINE": get_env('DB_ENGINE', required=True),
+        "NAME": get_env('DB_NAME', required=True),
+        "USER": get_env('DB_USER', required=True),
+        "PASSWORD": get_env('DB_PASSWORD', required=True),
+        "HOST": get_env('DB_HOST', required=True),
+        "PORT": get_env('DB_PORT', default=''),
     }
 }
+# Si DB_PORT viene vacía, Django acepta cadena vacía; si prefieres int, castealo:
+if DATABASES["default"]["PORT"]:
+    try:
+        DATABASES["default"]["PORT"] = int(DATABASES["default"]["PORT"])
+    except ValueError:
+        # dejar como string si no es convertible
+        pass
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -180,7 +182,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 LANGUAGE_CODE = 'es'
 USE_I18N = True
-# NOTE: USE_L10N was deprecated in recent Django versions; si tu versión lo requiere, mantenlo.
 USE_L10N = True
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_TZ = True
@@ -204,25 +205,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'usuario.CustomUser'
 
 # Configuración del correo electrónico
-# En desarrollo: console backend para evitar envíos reales
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    # En producción: esperamos que las claves estén en secrets o en variables de entorno.
-    # get_secret ya hace fallback a env vars, por eso aquí no envolvemos en try/except.
-    EMAIL_BACKEND = get_secret('EMAIL_BACKEND')
-    EMAIL_HOST = get_secret('EMAIL_HOST')
-    # Convertir puerto a int cuando sea aplicable
-    EMAIL_PORT = int(get_secret('EMAIL_PORT')) if get_secret('EMAIL_PORT') else None
-    # Normalizar booleanos comunes para EMAIL_USE_TLS
-    raw_use_tls = get_secret('EMAIL_USE_TLS')
-    if isinstance(raw_use_tls, bool):
-        EMAIL_USE_TLS = raw_use_tls
-    else:
-        EMAIL_USE_TLS = str(raw_use_tls).lower() in ('1', 'true', 'yes')
-    EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
-    EMAIL_FILE_PATH = get_secret('EMAIL_FILE_PATH')
+    EMAIL_BACKEND = get_env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_HOST = get_env('EMAIL_HOST', required=True)
+    EMAIL_PORT = get_env('EMAIL_PORT', default='')
+    if EMAIL_PORT:
+        try:
+            EMAIL_PORT = int(EMAIL_PORT)
+        except ValueError:
+            raise ImproperlyConfigured("EMAIL_PORT debe ser un entero.")
+    raw_use_tls = get_env('EMAIL_USE_TLS', default='False')
+    EMAIL_USE_TLS = str(raw_use_tls).strip().lower() in ('1', 'true', 'yes')
+    EMAIL_HOST_USER = get_env('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = get_env('EMAIL_HOST_PASSWORD', default='')
+    EMAIL_FILE_PATH = get_env('EMAIL_FILE_PATH', default=None)
 
 # Mensajes (Bootstrap mapping)
 from django.contrib.messages import constants as messages
