@@ -1,7 +1,7 @@
 # cuentas/urls.py
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from .views import PerfilUsuarioUpdateView, CambiarContrasenaView, blocked_ips_list, unblock_ip_view
+from .views import PerfilUsuarioUpdateView, CambiarContrasenaView, blocked_ips_list, unblock_ip_view, RecuperarPasswordView, ResetearPasswordUsuarioView
 
 app_name = 'usuario'
 
@@ -18,4 +18,7 @@ urlpatterns = [
     # protegerlas con staff_member_required como hacemos en las vistas)
     path("admin/blocked-ips/", blocked_ips_list, name="blocked_ips_list"),
     path("admin/blocked-ips/unblock/<str:ip>/", unblock_ip_view, name="blocked_ips_unblock"),
+
+    path('recuperar-contrasena/', RecuperarPasswordView.as_view(), name='recuperar_contrasena'),
+    path('resetear-password/<int:user_id>/', ResetearPasswordUsuarioView.as_view(), name='resetear_password'),
 ]

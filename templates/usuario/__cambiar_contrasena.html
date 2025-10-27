@@ -1,0 +1,24 @@
+{% extends 'core/form_base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <div class="card shadow p-4">
+    <h4 class="text-center mb-3">Cambiar contraseña</h4>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text|safe }}</div>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary w-100">Guardar nueva contraseña</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

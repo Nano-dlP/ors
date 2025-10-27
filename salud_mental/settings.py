@@ -105,7 +105,7 @@ MIDDLEWARE = [
 
 #https://pypi.org/project/django-session-timeout/
 
-SESSION_EXPIRE_SECONDS = 60 # 1 minute
+SESSION_EXPIRE_SECONDS = 600 # 10 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # Reiniciar el contador cada vez que el usuario interactúa
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60 # Margen para agrupar requests frecuentes por minutos
 SESSION_TIMEOUT_REDIRECT = 'core:login'  # A dónde enviar al usuario cuando la sesión vence

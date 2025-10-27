@@ -1,0 +1,48 @@
+{% extends "core/form_base.html" %}
+
+{% block form_icon %}
+<i class="fas fa-key"></i>
+{% endblock %}
+
+{% block form_title %}
+Cambiar contraseña de {{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block form_fields %}
+  <div class="mb-3">
+    <label for="{{ form.old_password.id_for_label }}" class="form-label">
+      Contraseña actual
+    </label>
+    {% render_field form.old_password class="form-control rounded-3" placeholder="Ingrese su contraseña actual" %}
+    {% for error in form.old_password.errors %}
+      <div class="text-danger small fst-italic">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.new_password1.id_for_label }}" class="form-label fw-semibold">
+      Nueva contraseña
+    </label>
+    {% render_field form.new_password1 class="form-control rounded-3" placeholder="Ingrese la nueva contraseña" %}
+    {% for error in form.new_password1.errors %}
+      <div class="text-danger small fst-italic">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.new_password2.id_for_label }}" class="form-label fw-semibold">
+      Confirmar nueva contraseña
+    </label>
+    {% render_field form.new_password2 class="form-control rounded-3" placeholder="Repita la nueva contraseña" %}
+    {% for error in form.new_password2.errors %}
+      <div class="text-danger small fst-italic">{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block form_extra_button %}
+<!-- Si querés agregar otro botón, por ejemplo volver al perfil -->
+<a href="{% url 'usuario:editar_perfil' %}" class="btn btn-outline-secondary btn-sm">
+  <i class="fas fa-arrow-left me-1"></i> Volver al perfil
+</a>
+{% endblock %}
