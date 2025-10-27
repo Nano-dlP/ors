@@ -1,32 +1,68 @@
+# usuario/signals.py
 from django.contrib.auth.signals import user_login_failed
-from django.dispatch import receiver
 from django.core.cache import cache
-from .blocked_ip_helpers import add_blocked_ip, BLOCKED_KEY_PREFIX
+from django.conf import settings
+import logging
 
-MAX_FAILED_ATTEMPTS = 3
-BLOCK_TIME = 300  # 5 minutos
+logger = logging.getLogger(__name__)
 
-@receiver(user_login_failed)
-def bloquea_ip_login_fallido(sender, credentials, request, **kwargs):
-    ip = get_client_ip(request)
-    if not ip:
-        return
+# Configurables en settings.py (usa los tuyos si ya existen)
+ATTEMPT_LIMIT = getattr(settings, "IP_BLOCK_ATTEMPT_LIMIT", 3)
+ATTEMPT_WINDOW = getattr(settings, "IP_BLOCK_ATTEMPT_WINDOW", 5 * 60)  # segundos
+BLOCK_TIME = getattr(settings, "IP_BLOCK_TIME", 60 * 60)  # segundos
 
-    cache_key = f"failed_login:{ip}"
-    failed_attempts = cache.get(cache_key, 0) + 1
-    cache.set(cache_key, failed_attempts, timeout=BLOCK_TIME)
-
-    if failed_attempts >= MAX_FAILED_ATTEMPTS:
-        add_blocked_ip(ip, block_time=BLOCK_TIME)
-        # Opcional: resetear contador de intentos tras bloqueo
-        cache.delete(cache_key)
-
-
-def get_client_ip(request):
-    """Detecta la IP real del cliente, incluso detrás de proxy."""
-    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(",")[0].strip()
+def _get_client_ip(request):
+    # Cuidado con X-Forwarded-For — solo usar si estás detrás de proxy de confianza
+    xff = request.META.get("HTTP_X_FORWARDED_FOR")
+    if xff:
+        ip = xff.split(",")[0].strip()
     else:
         ip = request.META.get("REMOTE_ADDR")
-    return ip
+    return ip or "unknown"
+
+def _cache_key_ip(ip):
+    return f"login_attempts:ip:{ip}"
+
+def _cache_key_user(username):
+    return f"login_attempts:user:{username.lower()}"
+
+def _cache_key_block_ip(ip):
+    return f"blocked:ip:{ip}"
+
+def _cache_key_block_user(username):
+    return f"blocked:user:{username.lower()}"
+
+def login_failed(sender, credentials, request, **kwargs):
+    """
+    Signal handler para user_login_failed.
+    Incrementa contador de intentos para IP y para username; bloquea si supera el límite.
+    """
+    try:
+        ip = _get_client_ip(request) if request is not None else "unknown"
+    except Exception:
+        ip = "unknown"
+
+    username = credentials.get("username") or credentials.get("email") or "unknown"
+
+    # --- IP attempts ---
+    ip_key = _cache_key_ip(ip)
+    ip_count = cache.get(ip_key, 0) + 1
+    cache.set(ip_key, ip_count, timeout=ATTEMPT_WINDOW)
+    logger.debug("Failed login attempt IP=%s count=%s", ip, ip_count)
+
+    if ip_count >= ATTEMPT_LIMIT:
+        cache.set(_cache_key_block_ip(ip), True, timeout=BLOCK_TIME)
+        logger.warning("IP blocked: %s for %s seconds", ip, BLOCK_TIME)
+
+    # --- User attempts ---
+    user_key = _cache_key_user(username)
+    user_count = cache.get(user_key, 0) + 1
+    cache.set(user_key, user_count, timeout=ATTEMPT_WINDOW)
+    logger.debug("Failed login attempt USER=%s count=%s", username, user_count)
+
+    if user_count >= ATTEMPT_LIMIT:
+        cache.set(_cache_key_block_user(username), True, timeout=BLOCK_TIME)
+        logger.warning("User blocked: %s for %s seconds", username, BLOCK_TIME)
+
+# conectar la señal (se importará desde apps.py)
+user_login_failed.connect(login_failed)

@@ -1,0 +1,8 @@
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="text-danger">Acceso bloqueado</h1>
+    <p>{{ mensaje }}</p>
+    <a href="{% url 'core:login' %}" class="btn btn-primary mt-3">Volver al login</a>
+</div>
+{% endblock %}
