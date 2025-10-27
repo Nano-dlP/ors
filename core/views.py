@@ -11,12 +11,10 @@ from django.http import JsonResponse
 
 
 
-class IndexView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'core/home.html'
     login_url = 'core:login'
-    permission_required = 'core.view_index'
-    raise_exception = False  # devuelve 403 Forbidden si no tiene permiso
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Bienvenido al Sistema de Gestión de Salud Mental'
