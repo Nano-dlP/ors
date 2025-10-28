@@ -1,0 +1,40 @@
+server { listen 80; server_name midominio.com; # Cambiá por tu dominio o IP 
+
+# Carpeta donde están los archivos estáticos y media 
+root /var/www/salud_mental; 
+ 
+# Archivos estáticos 
+location /static/ { 
+    alias /var/www/salud_mental/static/; 
+    expires 30d;  # Cache largo para CSS, JS, imágenes 
+    add_header Cache-Control "public"; 
+} 
+ 
+# Archivos de media (subidos por usuarios) 
+location /media/ { 
+    alias /var/www/salud_mental/media/; 
+    expires 30d; 
+    add_header Cache-Control "public"; 
+} 
+ 
+# Todas las demás solicitudes van a Gunicorn 
+location / { 
+    proxy_pass http://127.0.0.1:8000;  # Gunicorn 
+    proxy_set_header Host $host; 
+    proxy_set_header X-Real-IP $remote_addr; 
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; 
+    proxy_set_header X-Forwarded-Proto $scheme; 
+ 
+    # Evitar cache del navegador para HTML 
+    add_header Cache-Control "no-store"; 
+} 
+ 
+# Opcional: aumentar tamaño de subida si tenés formularios grandes 
+client_max_body_size 20M; 
+ 
+# Logs 
+access_log /var/log/nginx/salud_mental_access.log; 
+error_log /var/log/nginx/salud_mental_error.log; 
+  
+
+} 
