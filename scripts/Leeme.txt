@@ -1,0 +1,4 @@
+Los archivos start_server.sh y stop_server.sh son los archivos para arrancar y parar el servidor.
+Para iniciarlos debes estar en esta carpeta y en la línea de comandos deberas escribir:
+./start_server.sh para iniciar el servidor y
+./stop_server.sh para detenerlo.

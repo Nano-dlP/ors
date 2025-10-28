@@ -209,6 +209,7 @@ if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
     EMAIL_BACKEND = get_env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+    DEFAULT_FROM_EMAIL = 'webmaster@localhost'
     EMAIL_HOST = get_env('EMAIL_HOST', required=True)
     EMAIL_PORT = get_env('EMAIL_PORT', default='')
     if EMAIL_PORT:

@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('profesional.urls')),
     path('', include('internacion.urls')),
     path('', include('intervencion.urls')),
+    
 
 ]
 if settings.DEBUG:
