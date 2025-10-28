@@ -1,0 +1,46 @@
+{% extends "core/index.html" %}
+{% load static %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/expedientes.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+{% endblock estilos %}
+
+{% block page_content %}
+<div class="welcome-bg">
+  <div class="welcome-card animate__animated animate__fadeIn">
+    <div class="text-center">
+      <!-- Logo o ícono principal -->
+      <div class="welcome-icon">
+        <i class="fas fa-briefcase"></i>
+      </div>
+      <div class="welcome-title">Bienvenido/a</div>
+      <div class="welcome-subtitle">Sistema de Gestión de Expedientes</div>
+    </div>
+    <div class="mb-4">
+      <p class="fs-6 text-muted mb-2">
+        Acceda a todas las funcionalidades administrativas de manera rápida, segura y eficiente.
+      </p>
+      <ul class="welcome-list list-unstyled mb-2">
+        <li><i class="fas fa-check-circle"></i> Registro y gestión de expedientes</li>
+        <li><i class="fas fa-check-circle"></i> Control de profesionales por área</li>
+        <li><i class="fas fa-check-circle"></i> Documentos y reportes digitales</li>
+        <li><i class="fas fa-check-circle"></i> Panel de intervenciones y seguimiento</li>
+      </ul>
+    </div>
+    <div class="welcome-actions d-flex justify-content-center mb-2">
+      <a href="{% url 'expediente:expediente_list' %}" class="btn btn-primary shadow-sm">
+        <i class="fas fa-folder-open me-2"></i> Expedientes
+      </a>
+      <a href="{% url 'profesional:profesional_list' %}" class="btn btn-outline-secondary shadow-sm">
+        <i class="fas fa-user-tie me-2"></i> Profesionales
+      </a>
+    </div>
+    <div class="welcome-footer text-center">
+      &copy; {{ now|date:"y" }} Sistema de Gestión de Expedientes. Todos los derechos reservados.
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
