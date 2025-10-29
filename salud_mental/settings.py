@@ -224,9 +224,13 @@ else:
             raise ImproperlyConfigured("EMAIL_PORT debe ser un entero.")
     raw_use_tls = get_env('EMAIL_USE_TLS', default='False')
     EMAIL_USE_TLS = str(raw_use_tls).strip().lower() in ('1', 'true', 'yes')
+    EMAIL_USE_SSL = get_env('EMAIL_USE_SSL', default='False')
+    raw_use_tls = str(EMAIL_USE_SSL).strip().lower() in ('1', 'true', 'yes')
+    EMAIL_USE_SSL = raw_use_tls
     EMAIL_HOST_USER = get_env('EMAIL_HOST_USER', default='')
     EMAIL_HOST_PASSWORD = get_env('EMAIL_HOST_PASSWORD', default='')
     EMAIL_FILE_PATH = get_env('EMAIL_FILE_PATH', default=None)
+    DEFAULT_FROM_EMAIL = get_env('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
 
 # Mensajes (Bootstrap mapping)
 from django.contrib.messages import constants as messages

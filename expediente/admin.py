@@ -7,6 +7,7 @@ admin.site.register(ResumenIntervencion)
 admin.site.register(TipoPatrocinio)
 admin.site.register(MedioIngreso)
 admin.site.register(EstadoExpediente)
+admin.site.register(TipoSolicitud)
 
 # Register your models here.
 
