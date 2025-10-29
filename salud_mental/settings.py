@@ -132,6 +132,11 @@ IP_BLOCK_ATTEMPT_LIMIT = int(get_env('IP_BLOCK_ATTEMPT_LIMIT', default=3))
 IP_BLOCK_ATTEMPT_WINDOW = int(get_env('IP_BLOCK_ATTEMPT_WINDOW', default=5 * 60))
 IP_BLOCK_TIME = int(get_env('IP_BLOCK_TIME', default=60 * 15))
 
+raw_whitelist = get_env('IP_WHITELIST', default='127.0.0.1')
+IP_WHITELIST = [ip.strip() for ip in raw_whitelist.split(',') if ip.strip()]
+
+
+
 ROOT_URLCONF = 'salud_mental.urls'
 
 TEMPLATES = [
