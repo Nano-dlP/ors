@@ -104,7 +104,7 @@ class Localidad(models.Model):
 
 class Sede(models.Model):
     sede = models.CharField('Sede', max_length=50)
-    abreviatura = models.CharField('Nombre abreviado', max_length=4, blank=True, null=True, unique=True)
+    abreviatura = models.CharField('Nombre abreviado', max_length=4, unique=True)
     telefono = models.CharField(max_length=20, verbose_name=("Teléfono"), blank=True, null=True)
     direccion_calle = models.CharField(max_length=50, verbose_name=("Calle"), blank=True, null=True)
     direccion_numero = models.CharField(max_length=10, verbose_name=("Número"), blank=True, null=True)

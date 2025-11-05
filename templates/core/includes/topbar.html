@@ -2,8 +2,7 @@
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
   <div class="me-4 text-secondary fw-bold d-flex align-items-center">
-    <i class="fas fa-clock me-1"></i>
-    {{ user.sede }} - {{ fecha_hora_actual|date:"d/m/Y H:i:s" }}
+    Sede actual: {{ user.sede }} - <i class="fas fa-clock me-1"></i> - {{ fecha_hora_actual|date:"d/m/Y H:i:s" }}
   </div>
 
   <!-- Sidebar Toggle (Topbar) -->

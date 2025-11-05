@@ -156,3 +156,17 @@ h6 {
   line-height: 1.5;
   vertical-align: middle;
 }
+
+form input[type="text"],
+form select {
+  text-transform: uppercase;
+}
+
+form input[type="number"],
+form input[type="email"],
+form textarea {
+  text-transform: none;
+}
+form input[type="date"] {
+  text-transform: none;
+}

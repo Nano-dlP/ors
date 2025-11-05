@@ -321,7 +321,15 @@ class DemandaEspontaneaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, F
     def get_form(self, form_class=None):
         if form_class is None:
             form_class = self.get_form_class()
-        form = form_class(user=self.request.user, **self.get_form_kwargs())
+
+        expediente = self.get_object()  # obtenemos el expediente que se está editando
+
+        form = form_class(
+            user=self.request.user,
+            expediente=expediente,  # 👈 pasamos la instancia al form
+            **self.get_form_kwargs()
+        )
+
         form.fields['medio_ingreso'].disabled = True
         return form
 
@@ -631,9 +639,18 @@ class OficioUpdateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     def get_form(self, form_class=None):
         if form_class is None:
             form_class = self.get_form_class()
-        form = form_class(user=self.request.user, **self.get_form_kwargs())
+
+        expediente = self.get_object()  # obtenemos el expediente que se está editando
+
+        form = form_class(
+            user=self.request.user,
+            expediente=expediente,  # 👈 pasamos la instancia al form
+            **self.get_form_kwargs()
+        )
+
         form.fields['medio_ingreso'].disabled = True
         return form
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -924,7 +941,15 @@ class SecretariaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, FormView
     def get_form(self, form_class=None):
         if form_class is None:
             form_class = self.get_form_class()
-        form = form_class(user=self.request.user, **self.get_form_kwargs())
+
+        expediente = self.get_object()  # obtenemos el expediente que se está editando
+
+        form = form_class(
+            user=self.request.user,
+            expediente=expediente,  # 👈 pasamos la instancia al form
+            **self.get_form_kwargs()
+        )
+
         form.fields['medio_ingreso'].disabled = True
         return form
 
@@ -1250,3 +1275,17 @@ def buscar_personas(request):
     )[:20]
     results = [{'id': i.id, 'text': f"{i.nombre} {i.apellido}"} for i in personas]
     return JsonResponse({'results': results})
+
+
+def handler403(request, exception=None):
+    return render(request, '403.html', status=403)
+
+def buscar_expediente(request):
+    query = request.GET.get('q', '')
+    expedientes = Expediente.objects.filter(
+        Q(cuij__icontains=query) | Q(clave_sisfe__icontains=query)
+    )
+    return render(request, 'expediente/expediente_buscar.html', {
+        'expedientes': expedientes,
+        'query': query,
+    })

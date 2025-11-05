@@ -72,3 +72,39 @@
     color: #868e96;
     font-size: 0.93rem;
   }
+
+  /* Eleva el card respecto al contenedor, con buen comportamiento responsive */
+.welcome-bg {
+  /* mantenemos un padding vertical razonable para pantallas pequeñas */
+  padding: 3.5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items:flex-end; /* poner al inicio del eje vertical */
+}
+
+/* sube el card y le aplica un pequeño desplazamiento visual */
+.welcome-card {
+  margin-top: 10px;              /* lo sube 40px; ajusta según necesites */
+  transform: translateY(-8px);    /* ajuste fino y suavizado visual */
+  transition: transform .25s ease, box-shadow .25s ease;
+  max-width: 920px;
+  width: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* En pantallas muy pequeñas reducimos el desplazamiento para que no choque con la cabecera */
+@media (max-width: 576px) {
+  .welcome-bg { padding: 1rem 0; }
+  .welcome-card {
+    margin-top: -12px;
+    transform: translateY(-4px);
+    padding: 1rem;
+  }
+}
+
+/* Si quieres un efecto más pronunciado al hacer scroll (opcional) */
+.welcome-card.scrolled {
+  transform: translateY(-18px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}

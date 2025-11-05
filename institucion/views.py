@@ -37,6 +37,11 @@ class InstitucionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
             query_string = urlencode({'institucion_id': self.object.pk})
             return HttpResponseRedirect(f'{next_url}?{query_string}')
         return response
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next')  # 🔹 pasa el parámetro al template
+        return context
 
 
 class InstitucionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):

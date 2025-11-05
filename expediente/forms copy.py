@@ -96,41 +96,16 @@ class DemandaEspontanea(forms.Form):
     
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Usuario autenticado
-        expediente = kwargs.pop('expediente', None)  # 👈 instancia del expediente pasada desde la vista
+        user = kwargs.pop('user', None)  # Obtenemos el usuario desde la vista
         super().__init__(*args, **kwargs)
 
-        # Si estamos editando un expediente existente
-        if expediente:
-            self.fields['sede'].initial = expediente.sede
-            self.fields['sede'].queryset = Sede.objects.all()
-            self.fields['sede'].disabled = True  # deshabilitar si no querés que se cambie
+        if user and user.is_authenticated and hasattr(user, 'sede'):
+            self.fields['sede'].initial = user.sede  # Valor inicial
+            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)  # Solo su sede
+            self.fields['sede'].disabled = True  # Opcional: para que no pueda cambiarla
+            
 
-        # Si estamos creando un nuevo registro
-        elif user and user.is_authenticated and hasattr(user, 'sede'):
-            self.fields['sede'].initial = user.sede
-            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)
-            self.fields['sede'].disabled = True
-
-
-    # === Conversión automática a MAYÚSCULAS ===
-    def clean(self):
-        cleaned_data = super().clean()
-
-        for field_name, value in cleaned_data.items():
-            field = self.fields.get(field_name)
-
-            if value and isinstance(value, str):
-                widget = field.widget
-
-                # Convertir solo si no es correo, número o textarea
-                if not isinstance(widget, (forms.EmailInput, forms.NumberInput, forms.Textarea)):
-                    cleaned_data[field_name] = value.upper()
-
-        return cleaned_data
-    
-    
-
+            
 class OficioForm(forms.Form):
     fecha_creacion = forms.DateField(
         label="Fecha de creación:",
@@ -249,22 +224,14 @@ class OficioForm(forms.Form):
 
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Usuario autenticado
-        expediente = kwargs.pop('expediente', None)  # 👈 instancia del expediente pasada desde la vista
+        user = kwargs.pop('user', None)  # Obtenemos el usuario desde la vista
         super().__init__(*args, **kwargs)
 
-        # Si estamos editando un expediente existente
-        if expediente:
-            self.fields['sede'].initial = expediente.sede
-            self.fields['sede'].queryset = Sede.objects.all()
-            self.fields['sede'].disabled = True  # deshabilitar si no querés que se cambie
-
-        # Si estamos creando un nuevo registro
-        elif user and user.is_authenticated and hasattr(user, 'sede'):
-            self.fields['sede'].initial = user.sede
-            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)
-            self.fields['sede'].disabled = True
-
+        if user and user.is_authenticated and hasattr(user, 'sede'):
+            self.fields['sede'].initial = user.sede  # Valor inicial
+            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)  # Solo su sede
+            self.fields['sede'].disabled = True  # Opcional: para que no pueda cambiarla
+            
 
 
             
@@ -376,32 +343,15 @@ class SecretariaForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
     )
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
-    #def __init__(self, *args, **kwargs):
-    #    user = kwargs.pop('user', None)  # Obtenemos el usuario desde la vista
-    #    super().__init__(*args, **kwargs)
-
-    #    if user and user.is_authenticated and hasattr(user, 'sede'):
-    #        self.fields['sede'].initial = user.sede  # Valor inicial
-    #        self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)  # Solo su sede
-    #        self.fields['sede'].disabled = True  # Opcional: para que no pueda cambiarla
-    
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Usuario autenticado
-        expediente = kwargs.pop('expediente', None)  # 👈 instancia del expediente pasada desde la vista
+        user = kwargs.pop('user', None)  # Obtenemos el usuario desde la vista
         super().__init__(*args, **kwargs)
 
-        # Si estamos editando un expediente existente
-        if expediente:
-            self.fields['sede'].initial = expediente.sede
-            self.fields['sede'].queryset = Sede.objects.all()
-            self.fields['sede'].disabled = True  # deshabilitar si no querés que se cambie
-
-        # Si estamos creando un nuevo registro
-        elif user and user.is_authenticated and hasattr(user, 'sede'):
-            self.fields['sede'].initial = user.sede
-            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)
-            self.fields['sede'].disabled = True
-
+        if user and user.is_authenticated and hasattr(user, 'sede'):
+            self.fields['sede'].initial = user.sede  # Valor inicial
+            self.fields['sede'].queryset = Sede.objects.filter(id=user.sede.id)  # Solo su sede
+            self.fields['sede'].disabled = True  # Opcional: para que no pueda cambiarla
+    
 
 
 class ExpedienteDocumentoForm(forms.ModelForm):

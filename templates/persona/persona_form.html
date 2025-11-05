@@ -225,7 +225,13 @@
           <!-- Botones -->
           <div class="text-end mt-4">
             <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
-            <a href="{% url 'persona:persona_list' %}" class="btn btn-secondary btn-sm">Cancelar</a>
+            {% if next %}
+            <a href="{{ next }}" class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            {% else %}
+              <a href="{% url 'persona:persona_list' %}" class="btn btn-outline-secondary me-2">Cancelar</a>
+            {% endif %}
           </div>
         </form>
       </div>

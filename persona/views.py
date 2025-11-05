@@ -37,6 +37,11 @@ class PersonaCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             return HttpResponseRedirect(f'{next_url}?{query_string}')
         return response
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next')  # 🔹 pasa el parámetro al template
+        return context
+
 
 
 class PersonaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -101,14 +106,12 @@ def persona_list(request):
 @permission_required('persona.puede_ver_persona', login_url='core:login', raise_exception=True)
 def agregar_persona_expediente(request):
     personas = Persona.objects.filter(estado=True).order_by('apellido', 'nombre')
-    next_url = request.GET.get("next")       # para redirigir después
+    next_url = request.GET.get("next") or reverse_lazy('expediente:expediente_list')  # valor por defecto
 
     return render(request, "expediente/expediente_persona_form.html", {
         "personas": personas,
-        "next_url": next_url,
-    
+        "next_url": next_url,  # 👈 usar "next" en vez de "next_url"
     })
-
 
 @login_required(login_url='core:login')
 #@permission_required('persona.puede_desactivar_persona, persona.puede_activar_persona', login_url='core:login', raise_exception=True)

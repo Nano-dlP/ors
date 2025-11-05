@@ -36,21 +36,23 @@
       <div class="card shadow">
 
         <!-- Header responsivo -->
-        <div class="card-header">
+        <div class="card-header bg-primary text-white">
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-            <!-- Título -->
-            <p class="h6 mb-0 text-white"><i class="fa fa-users"></i> PERSONAS</p>
-
-            <!-- Botón + Toolbar -->
-            <div class="d-flex flex-column flex-md-row flex-wrap align-items-start align-items-md-center gap-2 mt-2 mt-md-0 ms-md-auto">
-              <!--<a href="{% url 'persona:persona_create' %}" class="btn btn-sm btn-secondary">
-                <i class="fa fa-plus"></i> Agregar Persona
-              </a>-->
-              <div id="dt-toolbar-container" class="d-flex flex-wrap align-items-start align-items-md-center gap-2"></div>
+            
+            <!-- Izquierda: Título -->
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa fa-users"></i>
+              <span class="h6 mb-0">PERSONAS</span>
+            </div>
+            
+            <!-- Derecha: Botón Cancelar -->
+            <div class="ms-md-auto">
+              <a href="{{ next_url }}" class="btn btn-light btn-sm">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
             </div>
           </div>
         </div>
-
         <!-- Cuerpo -->
         <div class="card-body">
           {% if not personas %}
@@ -78,6 +80,7 @@
                   <td>{{ persona.nombre }}</td>
                   <td>
                     {% if medio_id %}
+                    
                     <a href="{% url 'expediente:expediente_create_with_medio' medio_id=medio_id%}?persona_id={{ persona.id }}"
                     class="btn btn-secondary btn-sm custom-btn" title="Seleccionar Persona">
                           <i class="fas fa-hand-pointer" style="color: #4a6572;"></i> Seleccionar
@@ -94,6 +97,7 @@
 
       </div>
     </div>
+    
     {% endblock body %}
   </div>
 </div>
