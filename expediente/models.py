@@ -3,6 +3,7 @@ from django.utils import timezone
 from core.models import Sede, Rol
 from persona.models import Persona
 from institucion.models import Institucion
+from expediente.managers import ExpedienteManager
 
 
 
@@ -112,6 +113,8 @@ class Expediente(models.Model):
     observaciones = models.TextField(verbose_name='Observaviones', blank=True, null=True)
 
     estado = models.BooleanField("Estado", default=True)
+
+    objects = ExpedienteManager()
 
     class Meta:
         unique_together = ('numero', 'anio', 'abreviatura')

@@ -22,7 +22,8 @@ from .views import (
     ExpedientePersonaCreateView,
     expediente_institucion_add_view,
     buscar_instituciones,
-    buscar_personas
+    buscar_personas,
+    EstadisticasRangoFechasView
 )
 
 app_name = 'expediente'
@@ -51,6 +52,8 @@ urlpatterns = [
     path('expediente/persona/', ExpedientePersonaListView.as_view(), name='expediente_persona_list'),
     path('api/instituciones/', buscar_instituciones, name='buscar_instituciones'),
     path('api/personas/', buscar_personas, name='buscar_personas'),
+
+    path('estadisticas/rango_fecha/', EstadisticasRangoFechasView.as_view(), name='expedientes_rango_fecha'),
 
     # ------------------------------
     # Catch-all para ignorar cualquier texto extra

@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from django.db.models import Q
 
 
+from expediente.models import Expediente
+
+
 import logging
 
 # Mezclas para controlar permisos y autenticación de usuarios
@@ -1289,3 +1292,20 @@ def buscar_expediente(request):
         'expedientes': expedientes,
         'query': query,
     })
+
+
+###########################################
+####Estadisticas de Expedientes############
+###########################################
+
+class EstadisticasRangoFechasView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    template_name = 'expediente/rango_fechas.html'
+    context_object_name = 'expedientes'
+    permission_required = 'expediente.view_expediente'
+    raise_exception = False  # Lanza 403 si no tiene permiso
+
+    def get_queryset(self):
+        fecha_inicio = self.request.GET.get('fecha_inicio')
+        fecha_fin = self.request.GET.get('fecha_fin')
+        return Expediente.objects.fecha_rango(fecha_inicio, fecha_fin)
+      

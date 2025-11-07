@@ -30,9 +30,9 @@ urlpatterns = [
     path('', include('profesional.urls')),
     path('', include('internacion.urls')),
     path('', include('intervencion.urls')),
-    
-
+    path('', include('auditoria.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

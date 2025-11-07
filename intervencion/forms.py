@@ -22,16 +22,16 @@ class IntervencionForm(forms.Form):
         label="Tipo de intervención"
     )
     fecha_intervencion = forms.DateField(
-    initial=datetime.date.today,
-    label="Fecha de intervención",  # <-- Debe ir aquí
-    widget=forms.DateInput(
-        format='%Y-%m-%d',
-        attrs={
-            'class': 'form-control form-control-sm',
-            'type': 'date',
-        }
-    ),
-    input_formats=['%Y-%m-%d']
+        initial=datetime.date.today,
+        label="Fecha de intervención",  # <-- Debe ir aquí
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control form-control-sm',
+                'type': 'date',
+            }
+        ),
+        input_formats=['%Y-%m-%d']
 )
 
     observacion = forms.CharField(

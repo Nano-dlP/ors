@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'internacion',
     'intervencion',
     'profesional',
+    'auditoria',
 ]
 
 # Cache: LocMem en desarrollo, Redis en producción (mejor rendimiento/compartido)
@@ -116,6 +117,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'core.middleware.RegistrarClienteMiddleware',
+
+    #Auditoria
+    'auditoria.middleware.AuditoriaUsuarioMiddleware',
 ]
 
 # Configuración de expirado de sesión (usa django-session-timeout)
