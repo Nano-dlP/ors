@@ -18,7 +18,7 @@
         <div class="card-header bg-warning text-white py-2 px-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
           <p class="h6 mb-0 text-white text-uppercase"><i class="far fa-file me-2"></i>EXPEDIENTES POR INSTITUCION</p>
           <div class="d-flex flex-wrap gap-2">
-            <a href="{% url 'expediente:medio_ingreso_select' %}" class="btn btn-sm btn-secondary">
+            <a href="#" class="btn btn-sm btn-secondary">
               <i class="fa fa-plus"></i> Agregar Institución al Expediente
             </a>
           </div>
@@ -59,12 +59,20 @@
                     <td>{{ exp.institucion }}</td>
                     <td>{{ exp.rol }}</td>
                     <td>
-                      <a href="#" 
-                        class="btn btn-sm btn-outline-warning me-1" title="Editar">
-                        <i class="far fa-edit"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-outline-info me-1" title="Detalles"><i class="fas fa-eye"></i></a>
-                      <a href="#" class="btn btn-sm btn-outline-danger me-1" title="Desactivar"><i class="far fa-trash-alt"></i></a>
+                       <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ expediente.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                          Opciones
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ expediente.id }}">
+                        
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572"
+                              href="{% url 'internacion:internacion_create' exp.id %}">
+                              <i class="far fa-plus-square me-2"></i>Agregar Internación
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                 {% endfor %}

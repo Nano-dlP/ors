@@ -69,7 +69,6 @@ class InstitucionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
     def form_valid(self, form):
         form.instance.institucion = form.cleaned_data['institucion']
         form.instance.tipo_institucion = form.cleaned_data['tipo_institucion']
-        #form.instance.user_modifica = self.request.user
         return super().form_valid(form)
 
 

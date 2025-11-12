@@ -1,0 +1,186 @@
+{% extends 'core/index.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block page_content %}
+<div class="container mt-4">
+  <div class="card shadow-sm border-0 rounded col-md-12 mx-auto">
+    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">
+        <i class="fas fa-bed me-2"></i>
+        {% if form.instance.pk %}Editar Internación{% else %}Registrar Internación{% endif %}
+      </h5>
+    </div>
+
+    <div class="card-body">
+      <form method="post" novalidate class="small-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <!-- DATOS DE LA INTERNACIÓN -->
+        <div class="card mb-3 border-0 shadow-sm">
+          <div class="card-body">
+            <h6 class="border-bottom pb-2 mb-3 text-secondary">
+              <i class="fas fa-info-circle me-1"></i> Datos de la internación
+            </h6>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="{{ form.expediente_institucion.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.expediente_institucion.label }}
+                </label>
+                {% if form.instance.pk %}
+                  {{ form.expediente_institucion|add_class:"form-control"|attr:"readonly:readonly"|attr:"disabled:disabled" }}
+                {% else %}
+                  {{ form.expediente_institucion|add_class:"form-control" }}
+                {% endif %}
+                {% if form.expediente_institucion.errors %}
+                  <div class="text-danger small">{{ form.expediente_institucion.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <label for="{{ form.fecha_internacion.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.fecha_internacion.label }}
+                </label>
+                {{ form.fecha_internacion|add_class:"form-control" }}
+                {% if form.fecha_internacion.errors %}
+                  <div class="text-danger small">{{ form.fecha_internacion.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <label for="{{ form.fecha_alta.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.fecha_alta.label }}
+                </label>
+                {{ form.fecha_alta|add_class:"form-control" }}
+                {% if form.fecha_alta.errors %}
+                  <div class="text-danger small">{{ form.fecha_alta.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row g-3 mt-3">
+              <div class="col-md-6">
+                <label for="{{ form.motivo_internacion.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.motivo_internacion.label }}
+                </label>
+                {{ form.motivo_internacion|add_class:"form-control" }}
+                {% if form.motivo_internacion.errors %}
+                  <div class="text-danger small">{{ form.motivo_internacion.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label for="{{ form.tipo_internacion.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.tipo_internacion.label }}
+                </label>
+                {{ form.tipo_internacion|add_class:"form-control" }}
+                {% if form.tipo_internacion.errors %}
+                  <div class="text-danger small">{{ form.tipo_internacion.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFORMACIÓN ADICIONAL -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h6 class="border-bottom pb-2 mb-3 text-secondary">
+              <i class="fas fa-clipboard-list me-1"></i> Información adicional
+            </h6>
+
+            <div class="row g-3 align-items-center">
+              <div class="col-md-5">
+                <label for="{{ form.requisitos.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.requisitos.label }}
+                </label>
+                {{ form.requisitos|add_class:"form-control" }}
+                {% if form.requisitos.errors %}
+                  <div class="text-danger small">{{ form.requisitos.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-check mt-4">
+                  {{ form.intento_suicidio|add_class:"form-check-input" }}
+                  <label for="{{ form.intento_suicidio.id_for_label }}" class="form-check-label ms-2 fw-semibold">
+                    {{ form.intento_suicidio.label }}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-5" id="modalidad_suicidio_container">
+                <label for="{{ form.modalidad_suicidio.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.modalidad_suicidio.label }}
+                </label>
+                {{ form.modalidad_suicidio|add_class:"form-control" }}
+                {% if form.modalidad_suicidio.errors %}
+                  <div class="text-danger small">{{ form.modalidad_suicidio.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row g-3 mt-3 align-items-center">
+              <div class="col-md-2">
+                <div class="form-check">
+                  {{ form.posee_adiccion|add_class:"form-check-input" }}
+                  <label for="{{ form.posee_adiccion.id_for_label }}" class="form-check-label ms-2 fw-semibold">
+                    {{ form.posee_adiccion.label }}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-5" id="tipo_adiccion_container">
+                <label for="{{ form.tipo_adiccion.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.tipo_adiccion.label }}
+                </label>
+                {{ form.tipo_adiccion|add_class:"form-control" }}
+                {% if form.tipo_adiccion.errors %}
+                  <div class="text-danger small">{{ form.tipo_adiccion.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-5">
+                <label for="{{ form.fecha_cumplimiento.id_for_label }}" class="form-label fw-semibold">
+                  {{ form.fecha_cumplimiento.label }}
+                </label>
+                {{ form.fecha_cumplimiento|add_class:"form-control" }}
+                {% if form.fecha_cumplimiento.errors %}
+                  <div class="text-danger small">{{ form.fecha_cumplimiento.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="col-md-12 mt-3">
+              <label class="fw-semibold">
+                <i class="fas fa-comment-medical me-1"></i> Observaciones
+              </label>
+              {{ form.observaciones|add_class:"form-control" }}
+              {% if form.observaciones.errors %}
+                <div class="text-danger small">{{ form.observaciones.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="fas fa-save me-1"></i> Guardar
+          </button>
+          <a href="{% url 'internacion:internacion_list' %}" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-times me-1"></i> Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}

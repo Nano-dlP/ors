@@ -82,6 +82,15 @@ class Internacion(models.Model):
     observaciones = models.TextField('Observaciones', blank=True, null=True)
     estado = models.BooleanField('Estado', default=True)
 
+    def save(self, *args, **kwargs):
+        """
+        Si la internación tiene una fecha de alta, se marca como inactiva (estado=False).
+        """
+        if self.fecha_alta:
+            self.estado = False
+        else:
+            self.estado = True
+        super().save(*args, **kwargs)
 
 
 

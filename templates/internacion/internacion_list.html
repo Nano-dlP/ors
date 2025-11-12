@@ -1,123 +1,149 @@
-{% extends "core/index.html" %}
+{% extends 'core/index.html' %}
 {% load static %}
+{% include "institucion/modal_confirmacion.html" %}
 
 {% block estilos %}
-  <!-- Bootstrap 5 DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-  <link rel="stylesheet" href="{% static 'css/estilos_tablas.css' %}">
-  <link rel="stylesheet" href="{% static 'vendor/fontawesome-free/css/all.min.css' %}">
+<!-- Bootstrap 5 DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+<link rel="stylesheet" href="{% static 'css/estilos_tablas.css' %}">
+
+<style>
+  .dt-toolbar .btn { margin-right: 0.25rem; }
+  .dataTables_filter input, .dataTables_length select {
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+  }
+</style>
 {% endblock estilos %}
 
 {% block page_content %}
-<div class="container-fluid mt-4">
-  <div class="row">
-    {% block body %}
-    <div class="col">
-      <!-- Card principal -->
-      <div class="card shadow">
 
-        <!-- Encabezado -->
-        <div class="card-header bg-warning text-white py-2 px-3 text-center">
-          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-            <p class="h6 mb-0 text-white text-uppercase">
-              <i class="fas fa-bed"></i> INTERNACIONES
-            </p>
-            <a href="{% url 'internacion:internacion_create' %}" class="btn btn-secondary">
-              <i class="fa fa-plus"></i> Nueva Internación
-            </a>
-          </div>
+<div class="container-fluid">
+  {% block body %}
+  <div class="col">
+    <div class="card shadow">
+
+      <!-- Header tipo toolbar -->
+      <div class="card-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <!-- Título a la izquierda -->
+          <p class="h6 mb-0 text-white"><i class="fas fa-landmark"></i> INTERNACIONES</p>
+
+          
         </div>
+      </div>
 
-        <!-- Cuerpo -->
-        <div class="card-body">
-          {% if not internaciones %}
-            <div class="alert alert-warning" role="alert">
-              No hay internaciones registradas.
-            </div>
-          {% else %}
-            <div class="table-responsive">
-              <table id="tabla-internaciones" class="table table-striped table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th>Exp. Institución</th>
-                    <th>Fecha Internación</th>
-                    <th>Fecha Alta</th>
-                    <th class="text-center">Estado</th>
-                    <th class="text-center">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for internacion in internaciones %}
+      <!-- Cuerpo -->
+      <div class="card-body"> 
+        {% if not internaciones %}
+          <div class="alert alert-warning" role="alert">
+            No hay internaciones registradas.
+          </div>
+        {% else %}
+          <div class="table-responsive w-100">
+            <table class="table table-striped table-hover table-respnsive-sm" id="id_tabla_internacion" style="font-size: 14px; width:100%">
+              <thead class="table">
+                <tr>
+                  <th>Exp. Institución</th>
+                  <th>Fecha Internación</th>
+                  <th>Fecha Alta</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for internacion in internaciones %}
                     <tr>
                       <td>{{ internacion.expediente_institucion|default:"-" }}</td>
                       <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
                       <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
                       <td class="text-center">
                         {% if internacion.estado %}
-                          <span class="badge bg-success">Activo</span>
+                          <span class="badge bg-warning text-dark fs-6 px-3 py-2">Internado</span>
                         {% else %}
-                          <span class="badge bg-danger">Inactivo</span>
+                          <span class="badge bg-success fs-6 px-3 py-2">Derivación o alta</span>
                         {% endif %}
-                      </td>
-                      <td class="text-center">
-                        <a href="#" class="btn btn-sm btn-outline-primary me-1" title="Editar">
-                          <i class="far fa-edit"></i>
-                        </a>
-                        <a href="#" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                          <i class="far fa-trash-alt"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% endif %}
-        </div>
-      </div> <!-- cierre card -->
-    </div> <!-- cierre col -->
-    {% endblock body %}
-  </div> <!-- cierre row -->
-</div> <!-- cierre container -->
+                    </td>
+                  <td>
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ internacion.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                          Opciones
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ internacion.id }}">
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572"href="{% url 'internacion:internacion_edit' internacion.id %}">
+                              <i class="far fa-edit me-2"></i>Editar
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'internacion:internacion_detail' internacion.id %}">
+                              <i class="far fa-eye me-2"></i>Detalles
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+  {% endblock body %}
+</div>
+
+<script>
+function mostrarModal(elemento) {
+    const form = document.getElementById('formConfirmacion');
+    const id = elemento.getAttribute('data-id');
+    const url = elemento.getAttribute('data-url').replace('0', id);
+    form.action = url;
+
+    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
+    modal.show();
+}
+</script>
 {% endblock page_content %}
 
 {% block js_page %}
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <!-- DataTables -->
-  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-  <!-- DataTables Buttons -->
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+<!-- jQuery y DataTables -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
 
-  <script>
-    $(document).ready(function () {
-      let table = $('#tabla-internaciones').DataTable({
+<script>
+$(document).ready(function () {
+    let table = $('#id_tabla_internacion').DataTable({
         pageLength: 5,
         lengthMenu: [5, 10, 20, 50],
-        language: {
-          url: "{% static 'js/es-ES.json' %}"
-        },
+        language: { url: "{% static 'js/es-ES.json' %}" },
         dom: "Bflrtip",
         buttons: [
-          { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
-          { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
-          { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
-          { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
-          { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
+            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
+            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
+            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
+            { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
+            { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
         ]
-      });
-
-      // El código original intentaba mover controles inexistentes.
-      // Eliminado para evitar errores de "undefined" en jQuery.
     });
-  </script>
+
+    // Mover toolbar al header
+    $('#id_tabla_internacion_length').appendTo('#dt-toolbar-container');
+    table.buttons().container().appendTo('#dt-toolbar-container');
+    $('#id_tabla_internacion_filter').appendTo('#dt-toolbar-container');
+});
+</script>
 {% endblock js_page %}

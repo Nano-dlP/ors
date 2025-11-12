@@ -50,8 +50,16 @@ class ExpedienteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     raise_exception = False  # Si no tiene permiso, muestra error 403
 
     def get_queryset(self):
-        # Retorna todos los expedientes ordenados por identificador
-        return Expediente.objects.all().order_by('-identificador')
+        user = self.request.user
+
+        # 🔹 Comenzamos desde el queryset base del modelo Expediente
+        queryset = Expediente.objects.all().order_by('-identificador')
+
+        # 🔹 Si el usuario tiene una sede asociada, filtramos los expedientes por esa sede
+        if hasattr(user, 'sede') and user.sede:
+            queryset = queryset.filter(sede=user.sede)
+
+        return queryset
 
 # Vista para seleccionar el medio de ingreso, primer paso para crear un expediente
 class MedioIngresoSelectView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
@@ -1197,26 +1205,64 @@ class ExpedientePersonaCreateView(LoginRequiredMixin, PermissionRequiredMixin, C
         context['personas'] = Persona.objects.all()
         context['roles'] = Rol.objects.all()
         return context
+    
+    def form_valid(self, form):
+        messages.success(self.request, "✅ El expediente se guardó correctamente.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "⚠️ No se pudo guardar el expediente. La persona ya tiene ese rol asociado.")
+        return super().form_invalid(form)
 
 
 
+# 🔹 Esta vista muestra un listado de registros del modelo ExpedienteInstitucion
 class ExpedienteInstitucionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    # Modelo base de la vista
     model = ExpedienteInstitucion
+
+    # Template HTML donde se mostrará la lista
     template_name = 'expediente/expediente_institucion_list.html'
+
+    # Nombre que se usará en el template para acceder a la lista de objetos
     context_object_name = 'expediente_instituciones'
+
+    # Permiso requerido para acceder a esta vista
     permission_required = 'expediente.view_expedienteinstitucion'
-    raise_exception = False  # Lanza 403 si no tiene permiso
 
+    # Si el usuario no tiene permiso, no lanza excepción 403 (podés poner True si querés)
+    raise_exception = False
+
+
+    # ✅ Sobrescribimos el método get_queryset()
+    # Este método define qué objetos del modelo se van a mostrar
     def get_queryset(self):
+        # Obtenemos el usuario que está logueado
         user = self.request.user
-        if user.is_authenticated and hasattr(user, 'sede'):
-            return ExpedienteInstitucion.objects.filter(expediente__sede=user.sede).select_related('expediente', 'institucion', 'rol')
-        else:
-            return ExpedienteInstitucion.objects.none()  # Si no hay usuario o sede, no mostrar nada
 
+        # Verificamos que el usuario esté autenticado y tenga una sede asociada
+        if user.is_authenticated and hasattr(user, 'sede'):
+            # Filtramos los expedientes para mostrar solo los de la sede del usuario
+            # Además, usamos select_related() para optimizar las consultas a las FK
+            return (
+                ExpedienteInstitucion.objects
+                .filter(expediente__sede=user.sede)   # 👈 filtra por sede
+                .select_related('expediente', 'institucion', 'rol')  # 👈 mejora eficiencia
+            )
+        else:
+            # Si el usuario no tiene sede (o no está logueado), no mostramos ningún registro
+            return ExpedienteInstitucion.objects.none()
+
+
+    # ✅ Agregamos datos adicionales al contexto del template
     def get_context_data(self, **kwargs):
+        # Obtenemos el contexto base de la clase padre
         context = super().get_context_data(**kwargs)
+
+        # Agregamos el usuario actual al contexto (por si querés usarlo en el template)
         context['user'] = self.request.user
+
+        # Retornamos el contexto completo al template
         return context
 
 

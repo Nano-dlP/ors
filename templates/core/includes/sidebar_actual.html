@@ -123,7 +123,7 @@
             <a class="collapse-item" href="{% url 'internacion:internacion_list' %}">
               <i class="fas fa-list-ul text-info me-2"></i> Listado
             </a>
-            <a class="collapse-item" href="{% url 'internacion:internacion_create' %}">
+            <a class="collapse-item" href="#">
               <i class="fas fa-plus-circle me-2 text-success"></i> Nuevo
             </a>
           </div>
@@ -174,12 +174,14 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Utilidades Personalizadas:</h6>
             <a class="collapse-item" href="{% url 'admin:index' %}">Administrar</a>
-            <a class="collapse-item" href="{% url 'auditoria:auditoria_expediente_list' %}">Ver Auditoria</a>
-{% comment %} 
-            
-            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-            <a class="collapse-item" href="utilities-other.html">Other</a>
-{% endcomment %}
+            <h6 class="collapse-header" style="color: #4a6572">Auditorías:</h6>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_expediente_list' %}">Expedientes</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_institucion_list' %}">Instituciones</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_internacion_list' %}">Internaciones</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_intervencion_list' %}">Intervenciones</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_persona_list' %}">Personas</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_usuario_list' %}">Usuarios</a>
+
           </div>
         </div>
       </li>

@@ -86,6 +86,9 @@ INSTALLED_APPS = [
     'intervencion',
     'profesional',
     'auditoria',
+
+    'crum',  # para obtener el usuario actual en signals
+
 ]
 
 # Cache: LocMem en desarrollo, Redis en producción (mejor rendimiento/compartido)
@@ -120,6 +123,7 @@ MIDDLEWARE = [
 
     #Auditoria
     'auditoria.middleware.AuditoriaUsuarioMiddleware',
+    'crum.CurrentRequestUserMiddleware',
 ]
 
 # Configuración de expirado de sesión (usa django-session-timeout)

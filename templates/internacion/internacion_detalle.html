@@ -1,0 +1,134 @@
+{% extends 'core/index.html' %}
+{% load static %}
+
+{% block page_content %}
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-3 col-md-12 mx-auto">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="fas fa-bed me-2"></i>Ficha de Internación</h5>
+      <a href="{% url 'internacion:internacion_list' %}" class="btn btn-light btn-sm shadow-sm">
+        <i class="fas fa-arrow-left me-1"></i> Volver
+      </a>
+    </div>
+
+    <div class="card-body p-4">
+
+      <!-- Datos del expediente -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="border-bottom pb-2 mb-3 text-secondary fw-bold">
+            <i class="fas fa-folder-open me-2"></i>Datos del Expediente
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="fw-semibold text-muted">Expediente</label>
+              <div class="form-control bg-light">{{ internacion.expediente_institucion.expediente }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-semibold text-muted">Institución</label>
+              <div class="form-control bg-light">{{ internacion.expediente_institucion.institucion }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos de la internación -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="border-bottom pb-2 mb-3 text-secondary fw-bold">
+            <i class="fas fa-info-circle me-2"></i>Datos de la Internación
+          </h6>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Fecha de Internación</label>
+              <div class="form-control bg-light">{{ internacion.fecha_internacion|date:"d/m/Y" }}</div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Fecha de Alta</label>
+              <div class="form-control bg-light">{{ internacion.fecha_alta|date:"d/m/Y" }}</div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Tipo de Internación</label>
+              <div class="form-control bg-light">{{ internacion.tipo_internacion|default:"—" }}</div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="fw-semibold text-muted">Motivo de Internación</label>
+              <div class="form-control bg-light">{{ internacion.motivo_internacion|default:"—" }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-semibold text-muted">Motivo de Alta</label>
+              <div class="form-control bg-light">{{ internacion.motivo_alta|default:"—" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="border-bottom pb-2 mb-3 text-secondary fw-bold">
+            <i class="fas fa-clipboard-list me-2"></i>Información Adicional
+          </h6>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Requisitos</label>
+              <div class="form-control bg-light">{{ internacion.requisitos|default:"—" }}</div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Intento de Suicidio</label>
+              <div class="form-control bg-light">
+                {% if internacion.intento_suicidio %}Sí{% else %}No{% endif %}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Modalidad de Suicidio</label>
+              <div class="form-control bg-light">{{ internacion.modalidad_suicidio|default:"—" }}</div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Posee Adicción</label>
+              <div class="form-control bg-light">
+                {% if internacion.posee_adiccion %}Sí{% else %}No{% endif %}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Tipo de Adicción</label>
+              <div class="form-control bg-light">{{ internacion.tipo_adiccion|default:"—" }}</div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-semibold text-muted">Fecha de Cumplimiento</label>
+              <div class="form-control bg-light">{{ internacion.fecha_cumplimiento|date:"d/m/Y"|default:"—" }}</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="fw-semibold text-muted"><i class="fas fa-comment-dots me-1"></i>Observaciones</label>
+            <div class="form-control bg-light" style="min-height: 90px;">{{ internacion.observaciones|default:"—" }}</div>
+          </div>
+        </div>
+      </div>
+
+{% comment %}
+      <!-- Estado -->
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="badge {% if internacion.estado %}bg-success{% else %}bg-secondary{% endif %} px-3 py-2">
+          {% if internacion.estado %}Activa{% else %}Finalizada{% endif %}
+        </div>
+
+        <a href="#" class="btn btn-warning shadow-sm">
+          <i class="fas fa-edit me-1"></i> Editar Internación
+        </a>
+      </div>
+{% endcomment %}
+
+    </div>
+  </div>
+</div>
+{% endblock page_content %}

@@ -4,7 +4,7 @@
 
 {% block page_content %}
 <div class="container mt-4">
-  <div class="card shadow border-0 rounded-3 col-md-12 mx-auto">
+  <div class="card shadow border-0 rounded-3 col-md-10 mx-auto">
     <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
       <h5 class="mb-0">
         <i class="fas fa-bed me-2"></i>
@@ -25,7 +25,7 @@
         <!-- DATOS DE LA INTERNACIÓN -->
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
-            <h6 class="border-bottom pb-2 mb-3 text-secondary fw-bold">
+            <h6 class="border-bottom pb-2 mb-3 text-primary fw-bold">
               <i class="fas fa-info-circle me-2"></i>Datos de la Internación
             </h6>
 
@@ -80,7 +80,7 @@
         <!-- INFORMACIÓN ADICIONAL -->
         <div class="card border-0 shadow-sm">
           <div class="card-body">
-            <h6 class="border-bottom pb-2 mb-3 text-secondary fw-bold">
+            <h6 class="border-bottom pb-2 mb-3 text-primary fw-bold">
               <i class="fas fa-clipboard-list me-2"></i>Información Adicional
             </h6>
 
@@ -137,8 +137,8 @@
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="submit" class="btn btn-primary px-4 shadow-sm">
-            <i class="fas fa-save me-2"></i>Guardar
+          <button type="submit" class="btn btn-success px-4 shadow-sm">
+            <i class="fas fa-save me-2"></i>{% if editar %}Actualizar{% else %}Guardar{% endif %}
           </button>
           <a href="{% url 'internacion:internacion_list' %}" class="btn btn-outline-secondary px-4 shadow-sm">
             <i class="fas fa-times me-2"></i>Cancelar
