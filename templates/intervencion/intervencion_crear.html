@@ -7,7 +7,7 @@
 
 <div class="container-fluid">
   <div class="container">
-    <div class="card shadow-lg border-0 rounded-4 col-lg-8 mx-auto animate__animated animate__fadeIn">
+    <div class="card shadow-lg border-0 rounded-4 col-lg-10 mx-auto animate__animated animate__fadeIn">
 
       <div class="card-header bg-gradient bg-success text-white py-3 px-4 text-center rounded-top-4">
         <h4 class="mb-0">
@@ -94,7 +94,7 @@
               <label class="mb-2">
                 <i class="fas fa-comment-medical me-2"></i>Observaciones
               </label>
-              {{ form.observacion|add_class:"form-control"|attr:"rows:3" }}
+              {{ form.observacion|add_class:"form-control textarea-3-rows"|attr:"rows:3" }}
               {% if form.observacion.errors %}
                 <div class="text-danger small mt-1">{{ form.observacion.errors }}</div>
               {% endif %}
@@ -103,7 +103,7 @@
 
           <div class="row mt-4">
             <div class="col text-end">
-              <button type="submit" class="btn btn-success px-4 me-2 shadow-sm">
+              <button type="submit" class="btn btn-primary px-4 me-2 shadow-sm">
                 <i class="fas fa-save me-2"></i>{% if editar %}Guardar cambios{% else %}Crear intervención{% endif %}
               </button>
               <a href="{% url 'intervencion:intervencion_list' %}" class="btn btn-outline-secondary px-4 shadow-sm">

@@ -170,3 +170,8 @@ form textarea {
 form input[type="date"] {
   text-transform: none;
 }
+
+.textarea-3-rows {
+    height: 90px !important; /* equivalente a unas 3 líneas */
+    resize: vertical; /* permite redimensionar manualmente si querés */
+}

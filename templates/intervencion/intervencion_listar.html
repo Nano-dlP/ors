@@ -57,7 +57,7 @@
                 {% for intervencion in intervenciones %}
                   <tr>
                     <td>{{ intervencion.expediente }}</td>
-                    <td>{{ intervencion.fecha_intervencion }}</td>
+                    <td>{{ intervencion.fecha_intervencion |date:"d/m/Y" }}</td>
                     <td>{{ intervencion.profesional }}</td>
                     <td>{{ intervencion.tipo_intervencion }}</td>
                     <td>

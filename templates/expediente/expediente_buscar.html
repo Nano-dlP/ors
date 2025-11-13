@@ -26,7 +26,7 @@
 <div class="container-fluid">
   <div class="row">
     {% block body %}
-    <div class="card shadow-lg border-0 rounded-4 mx-auto animate__animated animate__fadeIn" style="max-width: 900px;">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto animate__animated animate__fadeIn" >
     <div class="card-header bg-gradient bg-success text-white py-3 px-4 text-center rounded-top-4">
       <h4 class="mb-0">
         <i class="fas fa-folder-open me-2"></i>
@@ -36,23 +36,25 @@
     <div class="card-body bg-light rounded-bottom-4">
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0" id="id_tabla_inst">
-          <thead class="table-success">
+          <thead class="table-light">
             <tr>
-              <th scope="col" class="text-center">Fecha</th>
+              
               <th scope="col" class="text-center">Identificador</th>
               <th scope="col" class="text-center">Sede</th>
+              <th scope="col" class="text-center">Fecha</th>
               <th scope="col" class="text-center">Acción</th>
             </tr>
           </thead>
           <tbody>
             {% for expediente in expedientes %}
             <tr>
-              <td class="text-center fw-bold">{{ expediente.fecha_de_recepcion }}</td>
+              
               <td class="text-center">{{ expediente.identificador }}</td>
               <td class="text-center">{{ expediente.sede }}</td>
+              <td class="text-center">{{ expediente.fecha_creacion|date:"d/m/Y" }}</td>
               <td class="text-center">
                 <a href="{% url 'intervencion:intervencion_create' %}?expediente_id={{ expediente.id }}"
-                   class="btn btn-success btn-sm shadow-sm">
+                   class="btn btn-primary btn-sm shadow-sm">
                   <i class="fas fa-check-circle me-1"></i> Seleccionar
                 </a>
               </td>

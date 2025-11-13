@@ -1115,12 +1115,20 @@ def expediente_documentos_view(request, expediente_id):
 @login_required(login_url='core:login')
 @permission_required('expediente.view_expediente', login_url='core:login', raise_exception=True)
 def expediente_list(request):
-    expedientes = Expediente.objects.all()
-    next_url = request.GET.get("next")       # para redirigir después
+    user = request.user  # Obtenemos el usuario logueado
+    next_url = request.GET.get("next")  # Capturamos 'next' si viene por parámetro
 
+    # Si el usuario tiene una sede asociada, filtramos por ella
+    if hasattr(user, "sede") and user.sede:
+        expedientes = Expediente.objects.filter(sede=user.sede).order_by('-identificador')
+    else:
+        # Si el usuario no tiene sede, no mostramos nada
+        expedientes = Expediente.objects.none()
+
+    # Renderizamos el template con el contexto
     return render(request, "expediente/expediente_buscar.html", {
         "expedientes": expedientes,
-        "next_url": next_url,   # lo mandamos al template
+        "next_url": next_url,
     })
 
 

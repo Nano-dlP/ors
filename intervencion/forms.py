@@ -52,3 +52,33 @@ class IntervencionForm(forms.Form):
         intervencion.save()
         return intervencion
 
+
+class IntervencionCreateForm(forms.ModelForm):
+    class Meta:
+        model = Intervencion
+        fields = ['expediente', 'profesional', 'tipo_intervencion', 'fecha_intervencion', 'observacion']
+        widgets = {
+            'expediente': forms.Select(attrs={'class': "form-select d-none"}),  # oculto en UI
+            'profesional': forms.Select(attrs={'class': 'form-control'}),
+            'tipo_intervencion': forms.Select(attrs={'class': 'form-control'}),
+            'fecha_intervencion': forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'class': 'form-control form-control-sm',
+                    'type': 'date',
+                }
+            ),
+            'observacion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+        labels = {
+            'expediente': "Expediente",
+            'profesional': "Profesional",
+            'tipo_intervencion': "Tipo de intervención",
+            'fecha_intervencion': "Fecha de intervención",
+            'observacion': "Observaciones",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['fecha_intervencion'].input_formats = ['%Y-%m-%d']
+        self.fields['observacion'].widget.attrs['placeholder'] = 'Ingrese observaciones aquí...'
