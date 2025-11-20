@@ -23,7 +23,8 @@ from .views import (
     expediente_institucion_add_view,
     buscar_instituciones,
     buscar_personas,
-    EstadisticasRangoFechasView
+    EstadisticasRangoFechasView,
+    ExpedienteInstitucionCreateByIdView,
 )
 
 app_name = 'expediente'
@@ -47,6 +48,7 @@ urlpatterns = [
     path('oficio/<int:pk>/detalle/', OficioDetailView.as_view(), name='oficio_detail'),
     path('secretaria/<int:pk>/detalle/', SecretariaDetailView.as_view(), name='secretaria_detail'),
     path('expediente/crear_institucion/', ExpedienteInstitucionCreateView.as_view(), name='expediente_institucion_create'),
+    path('expediente/crear_institucion_by_id/<int:expediente_id>/', ExpedienteInstitucionCreateByIdView.as_view(), name='expediente_institucion_create_by_id'),
     path('expediente/institucion/', ExpedienteInstitucionListView.as_view(), name='expediente_institucion_list'),
     path('expediente/persona/agregar/', ExpedientePersonaCreateView.as_view(), name='expediente_persona_create'),
     path('expediente/persona/', ExpedientePersonaListView.as_view(), name='expediente_persona_list'),

@@ -110,6 +110,19 @@ def listar_institucion(request):
     })
 
 
+@login_required(login_url='core:login')
+@permission_required('institucion.add_institucion', login_url='core:login', raise_exception=True)
+def listar_institucion_by_id(request):
+    instituciones = Institucion.objects.filter(estado=True).order_by('institucion')
+    next_url = request.GET.get("next")       # para redirigir después
+    expediente_id = request.GET.get("expediente_id")   # <--- ESTA LÍNEA ES CLAVE
+
+    return render(request, "institucion/institucion_agregar_expediente_by_id.html",{ 
+        "instituciones": instituciones,
+        "next_url": next_url,
+        "expediente_id": expediente_id,   # <--- ASEGÚRATE DE PASARLO AL TEMPLATE
+    })
+
 
 @login_required(login_url='core:login')
 @permission_required('institucion.delete_institucion', login_url='core:login', raise_exception=True)

@@ -48,9 +48,9 @@
                 <div class="col-md-4 mb-3">
                   <label><i class="fas fa-university me-2"></i> Sede</label>
                   {{ form.sede }}
-{% if form.sede.disabled and form.sede.value %}
-  <input type="hidden" name="{{ form.sede.html_name }}" value="{{ form.sede.value }}">
-{% endif %}
+                  {% if form.sede.disabled and form.sede.value %}
+                    <input type="hidden" name="{{ form.sede.html_name }}" value="{{ form.sede.value }}">
+                  {% endif %}
                 </div>
                 <div class="col-md-4 mb-3">
                   <label><i class="fas fa-calendar-plus me-2"></i> Fecha de creación</label>

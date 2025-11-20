@@ -1,7 +1,7 @@
 # Importamos algunas librerías necesarias para trabajar con fechas y vistas en Django
 import datetime
 from django.views.generic import FormView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from django.http import JsonResponse
 from django.db.models import Q
@@ -61,6 +61,7 @@ class ExpedienteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         return queryset
 
+
 # Vista para seleccionar el medio de ingreso, primer paso para crear un expediente
 class MedioIngresoSelectView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     template_name = 'expediente/medio_ingreso.html'
@@ -94,6 +95,7 @@ class MedioIngresoSelectView(LoginRequiredMixin, PermissionRequiredMixin, FormVi
         else:
             # Si no coincide, vuelve a la selección
             return redirect('expediente:medio_ingreso_select')
+
 
 # Vista que decide qué formulario mostrar para editar según el tipo de expediente
 class ExpedienteUpdateDispatcherView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -596,7 +598,8 @@ class OficioCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
                 documento.save()
 
         messages.success(self.request, "El expediente fue creado correctamente.")
-        return super().form_valid(form)
+        return redirect(reverse('expediente:expediente_institucion_create_by_id', kwargs={'expediente_id': expediente.id})
+    )
 
     def form_invalid(self, form):
         messages.error(self.request, "Hubo errores al guardar el expediente. Verifique los campos.")
@@ -1180,6 +1183,78 @@ class ExpedienteInstitucionCreateView(LoginRequiredMixin, PermissionRequiredMixi
         context['instituciones'] = Institucion.objects.all()
         context['roles'] = Rol.objects.all()
         return context
+
+
+
+class ExpedienteInstitucionCreateByIdView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = ExpedienteInstitucion
+    form_class = ExpedienteInstitucionForm
+    success_url = reverse_lazy('expediente:expediente_institucion_list')
+    login_url = 'core:login'
+    permission_required = 'expediente.add_expedienteinstitucion'
+    raise_exception = False
+    template_name = 'expediente/expediente_institucion_form_by_id.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        expediente_id = self.kwargs.get('expediente_id')
+        institucion_id = self.request.GET.get('institucion_id')
+
+        if expediente_id:
+            initial['expediente'] = expediente_id
+        
+        if institucion_id:
+            initial['institucion'] = institucion_id
+
+        return initial
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente_id = self.kwargs.get('expediente_id')
+        numero_expediente = None
+        if expediente_id:
+            try:
+                expediente = Expediente.objects.get(id=expediente_id)
+                numero_expediente = expediente.identificador
+            except Expediente.DoesNotExist:
+                numero_expediente = None
+        context['numero_expediente'] = numero_expediente
+        context['expediente_id'] = expediente_id
+        context['instituciones'] = Institucion.objects.all()
+        context['roles'] = Rol.objects.all()
+
+        institucion_id = self.request.GET.get('institucion_id')  # o como estés recibiéndolo
+        if institucion_id:
+            try:
+                context['institucion_seleccionada'] = Institucion.objects.get(id=institucion_id)
+            except Institucion.DoesNotExist:
+                context['institucion_seleccionada'] = None
+        
+        return context
+
+    def form_valid(self, form):
+        print("POST recibido:", self.request.POST)  # útil si querés ver si el ID llega
+
+        accion = self.request.POST.get('accion')
+        response = super().form_valid(form)
+
+        if accion == "guardar":
+            messages.success(self.request, "Se ha agregado Institución y Rol al expediente correctamente.")
+            return redirect('expediente:expediente_institucion_list')
+
+        if accion == "internacion":
+            messages.success(self.request, "Se ha agregado Institución y Rol al expediente correctamente.")
+            return redirect(
+                reverse(
+                    'internacion:internacion_create',
+                    kwargs={'expediente_institucion_id': self.object.id}
+                )
+            )
+
+        messages.success(self.request, "Se ha agregado Institución y Rol al expediente correctamente.")
+        return redirect('expediente:expediente_institucion_list')
+
 
 
 
