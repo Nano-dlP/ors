@@ -66,11 +66,29 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a href="{% url 'persona:persona_edit' persona.id %}" class="btn btn-sm btn-outline-warning me-1" title="Editar"><i class="far fa-edit"></i></a>
-                    <a href="{% url 'persona:persona_detail' persona.id %}" class="btn btn-sm btn-outline-info me-1" title="Detalles"><i class="fas fa-eye"></i></a>
-                    <a href="{% url 'persona:desactivar_persona' persona.id %}" class="btn btn-sm btn-outline-danger me-1" title="Desactivar"><i class="far fa-trash-alt"></i></a>
-                  
-                    
+                     <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ expediente.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                          Opciones
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ expediente.id }}">
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'persona:persona_edit' persona.id %}" title="Editar">
+                              <i class="far fa-edit me-2"></i>Editar
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'persona:persona_detail' persona.id %}" title="Detalles">
+                              <i class="far fa-eye me-2"></i>Detalles
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'persona:desactivar_persona' persona.id %}" title="Desactivar/Activar Persona">
+                              <i class="far fa-trash-alt me-2"></i>Desactivar/Activar
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                
                   </td>
                 </tr>
                 {% endfor %}

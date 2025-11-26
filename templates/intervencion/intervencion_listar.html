@@ -50,7 +50,6 @@
                   <th>Fecha</th>
                   <th>Profesional</th>
                   <th>Tipo</th>
-                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,14 +59,7 @@
                     <td>{{ intervencion.fecha_intervencion |date:"d/m/Y" }}</td>
                     <td>{{ intervencion.profesional }}</td>
                     <td>{{ intervencion.tipo_intervencion }}</td>
-                    <td>
-                      <a href="#" 
-                        class="btn btn-sm btn-outline-warning me-1" title="Editar">
-                        <i class="far fa-edit"></i>
-                      </a>
-                      <a href="#" class="btn btn-sm btn-outline-info me-1" title="Detalles"><i class="fas fa-eye"></i></a>
-                      <a href="#" class="btn btn-sm btn-outline-danger me-1" title="Desactivar"><i class="far fa-trash-alt"></i></a>
-                    </td>
+                    
                   </tr>
                 {% endfor %}
               </tbody>

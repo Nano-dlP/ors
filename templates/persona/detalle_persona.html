@@ -1,60 +1,121 @@
 <div class="container my-4">
-  <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-bottom">
-      <h5 class="mb-0 text-dark fw-semibold">
-        <i class="fas fa-id-card text-white me-2 fs-4"></i>
-        <span class="text-white fw-semibold">Ficha Personal</span>
+  <div class="card border-0 shadow-lg rounded-3">
+    
+    <!-- HEADER -->
+    <div class="card-header bg-primary text-white py-3 rounded-top">
+      <h5 class="mb-0 fw-bold d-flex align-items-center">
+        <i class="fas fa-id-card me-2 fs-4"></i>
+        Ficha Personal
       </h5>
     </div>
 
-    <div class="card-body">
+    <div class="card-body px-4 py-4">
+
       <!-- DATOS PERSONALES -->
       <section class="mb-4">
-        <h6 class="text-uppercase text-secondary fw-bold small mb-3">Datos Personales</h6>
-        <div class="row mb-2">
-          <div class="col-md-4"><span class="text-muted">Nombre:</span> {{ persona.nombre }}</div>
-          <div class="col-md-4"><span class="text-muted">Apellido:</span> {{ persona.apellido }}</div>
-          <div class="col-md-4"><span class="text-muted">DNI:</span> {{ persona.numero_documento }}</div>
+        <h6 class="text-uppercase text-secondary fw-bold small mb-3 border-bottom pb-1">
+          Datos Personales
+        </h6>
+
+        <div class="row gy-2">
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">Nombre:</span> 
+            <span class="text-dark">{{ persona.nombre }}</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">Apellido:</span> 
+            <span class="text-dark">{{ persona.apellido }}</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">DNI:</span> 
+            <span class="text-dark">{{ persona.numero_documento }}</span>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-4"><span class="text-muted">Género:</span> {{ persona.genero }}</div>
-          <div class="col-md-4"><span class="text-muted">Nacimiento:</span> {{ persona.fecha_nacimiento }}</div>
-          <div class="col-md-4"><span class="text-muted">Email:</span> {{ persona.email }}</div>
+
+        <div class="row gy-2 mt-1">
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">Género:</span> 
+            <span class="text-dark">{{ persona.genero }}</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">Nacimiento:</span> 
+            <span class="text-dark">{{ persona.fecha_nacimiento }}</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted fw-semibold">Email:</span> 
+            <span class="text-dark">{{ persona.email }}</span>
+          </div>
         </div>
       </section>
 
       <!-- DOMICILIO -->
       <section class="mb-4">
-        <h6 class="text-uppercase text-secondary fw-bold small mb-3">Domicilio</h6>
-        <div class="row mb-2">
-          <div class="col-md-6"><span class="text-muted">Calle:</span> {{ persona.direccion_calle }}</div>
-          <div class="col-md-2"><span class="text-muted">Número:</span> {{ persona.direccion_numero }}</div>
-          <div class="col-md-2"><span class="text-muted">Piso:</span> {{ persona.direccion_piso }}</div>
-          <div class="col-md-2"><span class="text-muted">Depto:</span> {{ persona.direccion_depto }}</div>
+        <h6 class="text-uppercase text-secondary fw-bold small mb-3 border-bottom pb-1">
+          Domicilio
+        </h6>
+
+        <div class="row gy-2">
+          <div class="col-md-6">
+            <span class="text-muted fw-semibold">Calle:</span> 
+            {{ persona.direccion_calle }}
+          </div>
+          <div class="col-md-2">
+            <span class="text-muted fw-semibold">Número:</span> 
+            {{ persona.direccion_numero }}
+          </div>
+          <div class="col-md-2">
+            <span class="text-muted fw-semibold">Piso:</span> 
+            {{ persona.direccion_piso }}
+          </div>
+          <div class="col-md-2">
+            <span class="text-muted fw-semibold">Depto:</span> 
+            {{ persona.direccion_depto }}
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-6"><span class="text-muted">Localidad:</span> {{ persona.localidad }}</div>
-          <div class="col-md-6"><span class="text-muted">Ciudad de Nacimiento:</span> {{ persona.ciudad_nacimiento }}</div>
+
+        <div class="row gy-2 mt-1">
+          <div class="col-md-6">
+            <span class="text-muted fw-semibold">Localidad:</span> 
+            {{ persona.localidad }}
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted fw-semibold">Ciudad de Nacimiento:</span> 
+            {{ persona.ciudad_nacimiento }}
+          </div>
         </div>
       </section>
 
       <!-- INFORMACIÓN LABORAL -->
       <section class="mb-4">
-        <h6 class="text-uppercase text-secondary fw-bold small mb-3">Información Laboral</h6>
-        <div class="row">
-          <div class="col-md-6"><span class="text-muted">Ocupación:</span> {{ persona.ocupacion }}</div>
-          <div class="col-md-6"><span class="text-muted">Nivel Educativo:</span> {{ persona.nivel_educativo }}</div>
+        <h6 class="text-uppercase text-secondary fw-bold small mb-3 border-bottom pb-1">
+          Información Laboral
+        </h6>
+
+        <div class="row gy-2">
+          <div class="col-md-6">
+            <span class="text-muted fw-semibold">Ocupación:</span> 
+            {{ persona.ocupacion }}
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted fw-semibold">Nivel Educativo:</span> 
+            {{ persona.nivel_educativo }}
+          </div>
         </div>
       </section>
 
       <!-- BOTONES -->
-      <div class="d-flex justify-content-end">
-        <a href="{% url 'persona:persona_list' %}" class="btn btn-outline-secondary me-2">
-          <i class="fas fa-arrow-left text-muted me-1"></i> Volver
+      <div class="d-flex justify-content-end mt-4">
+
+        <a href="{% url 'persona:persona_list' %}" 
+          class="btn btn-outline-secondary btn-lg me-2 px-4">
+          <i class="fas fa-arrow-left me-1"></i> Volver
         </a>
-        <button onclick="window.print()" class="btn btn-outline-primary">
-          <i class="fas fa-print text-muted me-1"></i> Imprimir
+
+        <button onclick="window.print()" 
+          class="btn btn-primary btn-lg px-4">
+          <i class="fas fa-print me-1"></i> Imprimir
         </button>
+
       </div>
     </div>
   </div>
