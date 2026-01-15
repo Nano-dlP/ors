@@ -365,6 +365,7 @@ class SecretariaForm(forms.Form):
     )
     tipo_patrocinio = forms.ModelChoiceField(
         label="Tipo de patrocinio:",
+        required=False,
         queryset=TipoPatrocinio.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
     )

@@ -1,0 +1,139 @@
+{% extends "core/index.html" %}
+{% load static %}
+{% load tz %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'vendor/fontawesome-free/css/all.css' %}">
+<style>
+  /* Contenedor principal */
+  .estadisticas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Tarjeta individual */
+  .estadistica-item {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .estadistica-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Título */
+  .estadistica-item h4 {
+    font-weight: 600;
+    color: #4a6572 !important;
+    margin-bottom: 1rem;
+  }
+
+  /* Lista */
+  .estadistica-item ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .estadistica-item li {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+    color: #34495e;
+  }
+
+  /* Filtros */
+  .filtros {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.05);
+  }
+
+  .filtros label {
+    font-weight: 500;
+    color: #2c3e50;
+  }
+
+  .filtros input[type="date"] {
+    border-radius: 6px;
+  }
+
+  .btn-filtrar {
+    background-color: #4a6572 !important;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+  }
+  .btn-filtrar:hover {
+    background-color: #1f2e3d;
+  }
+</style>
+{% endblock estilos %}
+
+{% block page_content %}
+
+<div class="container-fluid mt-4">
+  <h2 class="mb-3 text-primary">
+    <i class="fas fa-chart-bar me-2"></i> Estadísticas de Expedientes
+  </h2>
+
+  <form action="" method="get" class="mb-4">
+    <div class="filtros">
+      <div>
+        <label for="fecha_inicio" class="form-label">Fecha inicio</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+      </div>
+      <div>
+        <label for="fecha_fin" class="form-label">Fecha fin</label>
+        <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-filtrar">
+          <i class="fas fa-filter me-1"></i> Filtrar
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="estadisticas-container">
+    <div class="estadistica-item">
+      <h4><i class="fas fa-calendar-alt me-2 text-secondary"></i> Expedientes por Fecha de Creación</h4>
+      <ul>
+        {% if expedientes %}
+          {% for e in expedientes %}
+            <li>
+              <strong>{{ e.identificador }}</strong> — {{ e.estado }}  - {{ e.medio_ingreso }} - {{ e.user_name }}
+              <span class="text-muted">({{ e.fecha_creacion|date:"d/m/Y" }})</span>
+            </li>
+          {% endfor %}
+          <li><strong>Total de expedientes:</strong> {{ expedientes|length }}</li>
+        {% else %}
+          <li class="text-muted fst-italic">No se encontraron expedientes en este rango.</li>
+        {% endif %}
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+{% endblock page_content %}
+
+{% block scripts %}
+<script src="{% static 'vendor/jquery/jquery.min.js' %}" defer></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}" defer></script>
+<script src="{% static 'vendor/fontawesome-free/js/all.min.js' %}" defer></script>
+
+{% endblock scripts %}

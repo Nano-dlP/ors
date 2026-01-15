@@ -1,44 +1,75 @@
-# Importamos algunas librerías necesarias para trabajar con fechas y vistas en Django
+# Importamos librerías estándar de Python para trabajar con fechas
 import datetime
+
+# Importamos vistas genéricas basadas en clases para manejar formularios
 from django.views.generic import FormView
+
+# Utilidades de Django para generar y resolver URLs de manera dinámica
 from django.urls import reverse, reverse_lazy
 
+# Permite devolver respuestas JSON a peticiones AJAX o API internas
 from django.http import JsonResponse
+
+# Herramientas de Django para realizar consultas más complejas a la base de datos
 from django.db.models import Q
 
-
+# Modelo principal de expedientes (importado aquí por compatibilidad histórica)
 from expediente.models import Expediente
 
-
+# Configuración del logger del módulo para registrar eventos y errores
 import logging
 
-# Mezclas para controlar permisos y autenticación de usuarios
+# Mixins para exigir que el usuario esté autenticado y tenga permisos específicos
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+# Decoradores equivalentes para funciones (no vistas basadas en clases)
 from django.contrib.auth.decorators import login_required, permission_required
 
-# Vistas genéricas para mostrar listas y editar objetos
+# Vistas genéricas para listas, detalle, creación, edición y eliminación de objetos
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-# Funciones para redirigir usuarios y obtener objetos de la base de datos
+# Funciones auxiliares para redirecciones y obtención segura de objetos
 from django.shortcuts import redirect
 
-# Importamos los formularios que se usarán en las vistas
-from .forms import DemandaEspontanea, MedioIngresoForm, OficioForm, SecretariaForm, ExpedienteInstitucionForm, ExpedientePersonaForm
+# Formularios utilizados por las vistas de este módulo
+from .forms import (
+    DemandaEspontanea,
+    MedioIngresoForm,
+    OficioForm,
+    SecretariaForm,
+    ExpedienteInstitucionForm,
+    ExpedientePersonaForm
+)
 
-# Importamos los modelos (tablas) que usaremos para guardar y consultar información
-from .models import Expediente, ExpedientePersona, Rol, ExpedienteInstitucion, ExpedienteDocumento, MedioIngreso
+# Modelos relacionados que se manejarán en las vistas
+from .models import (
+    Expediente,
+    ExpedientePersona,
+    Rol,
+    ExpedienteInstitucion,
+    ExpedienteDocumento,
+    MedioIngreso
+)
+
+# Otros modelos externos necesarios (personas e instituciones)
 from persona.models import Persona
 from institucion.models import Institucion
 
-# Funciones para renderizar páginas y mostrar mensajes
+# Otras funciones comunes para renderizar plantillas, redireccionar y manejar errores 404
 from django.shortcuts import render, redirect, get_object_or_404
+
+# Sistema de mensajes de Django (exitos, errores, información)
 from django.contrib import messages
 
+# Formularios en conjunto (formsets) para cargar documentos del expediente
 from .forms import ExpedienteDocumentoFormSet, ExpedienteDocumentoForm
+
+# Vista base sin funcionalidades adicionales (útil para extender manualmente)
 from django.views import View
 
-
+# Instanciamos un logger para este archivo, útil para depuración y auditoría
 logger = logging.getLogger(__name__)
+
 
 # Vista para listar todos los expedientes (casos)
 class ExpedienteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -1256,6 +1287,64 @@ class ExpedienteInstitucionCreateByIdView(LoginRequiredMixin, PermissionRequired
         return redirect('expediente:expediente_institucion_list')
 
 
+class ExpedientePersonaCreateByIdView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = ExpedientePersona
+    form_class = ExpedientePersonaForm
+    success_url = reverse_lazy('expediente:expediente_persona_list')
+    login_url = 'core:login'
+    permission_required = 'expediente.add_expedientepersona'
+    raise_exception = False
+    template_name = 'expediente/expediente_persona_form_by_id.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        expediente_id = self.kwargs.get('expediente_id')
+        persona_id = self.request.GET.get('persona_id')
+
+        if expediente_id:
+            initial['expediente'] = expediente_id
+        
+        if persona_id:
+            initial['persona'] = persona_id
+
+        return initial
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente_id = self.kwargs.get('expediente_id')
+        numero_expediente = None
+        if expediente_id:
+            try:
+                expediente = Expediente.objects.get(id=expediente_id)
+                numero_expediente = expediente.identificador
+            except Expediente.DoesNotExist:
+                numero_expediente = None
+        context['numero_expediente'] = numero_expediente
+        context['expediente_id'] = expediente_id
+        context['personas'] = Persona.objects.all()
+        context['roles'] = Rol.objects.all()
+        context['next'] = self.request.GET.get('next')  # 🔹 pasa el parámetro al template
+
+        persona_id = self.request.GET.get('persona_id')  # o como estés recibiéndolo
+        if persona_id:
+            try:
+                context['persona_seleccionada'] = Persona.objects.get(id=persona_id)
+            except Persona.DoesNotExist:
+                context['persona_seleccionada'] = None
+        
+        return context
+    
+    def form_valid(self, form):
+        print("POST recibido:", self.request.POST)  # útil si querés ver si el ID llega
+
+        messages.success(self.request, "Se ha agregado Persona y Rol al expediente correctamente.")
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, "⚠️ No se pudo guardar el expediente. La persona ya tiene ese rol asociado.")
+        return super().form_invalid(form)
+
 
 
 class ExpedientePersonaCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -1437,4 +1526,14 @@ class EstadisticasRangoFechasView(LoginRequiredMixin, PermissionRequiredMixin, L
         fecha_inicio = self.request.GET.get('fecha_inicio')
         fecha_fin = self.request.GET.get('fecha_fin')
         return Expediente.objects.fecha_rango(fecha_inicio, fecha_fin)
-      
+
+
+class EstadisticasPorSedeView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    template_name = 'expediente/estadisticas_por_sede.html'
+    context_object_name = 'expedientes'
+    permission_required = 'expediente.view_expediente'
+    raise_exception = False  # Lanza 403 si no tiene permiso
+
+    def get_queryset(self):
+        sede = self.request.GET.get('sede')
+        return Expediente.objects.estadisticas_por_sede()      

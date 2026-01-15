@@ -78,12 +78,12 @@
                           </li>
                           <li>
                             <a class="dropdown-item" style="color: #4a6572" href="{% url 'expediente:expediente_institucion_create_by_id' expediente.id %}?expediente={{ expediente.id }}" title="Agregar Institución">
-                              <i class="far fa-trash-alt me-2"></i>Agregar Institución
+                              <i class="fa-solid fa-file-arrow-up me-2"></i>Agregar Institución y rol
                             </a>
                           </li>
                           <li>
-                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'expediente:expediente_persona_create'%}?expediente={{ expediente.id }}" title="Agregar Persona">
-                              <i class="far fa-trash-alt me-2"></i>Agregar Persona
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'expediente:expediente_persona_create_by_id' expediente.id %}?expediente={{ expediente.id }}" title="Agregar Persona">
+                              <i class="fa-solid fa-file-arrow-up me-2"></i>Agregar Persona y rol
                             </a>
                           </li>
                         </ul>

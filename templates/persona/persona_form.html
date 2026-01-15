@@ -179,21 +179,33 @@
           <div class="card-body p-3">
 
             <h6 class="border-bottom pb-2 mb-3">Seguridad social y recursos</h6>
+            
             <div class="row align-items-center">
+              {% comment %}
               <div class="col-md-6 mb-3">
                 {{ form.derecho_seguridad_social.label_tag }}
                 {% render_field form.derecho_seguridad_social class="form-control" %}
               </div>
 
+            {% endcomment %}
+              
               <div class="col-md-4 d-flex align-items-center mb-3">
                 <div class="form-check">
                   {{ form.administra_recursos|add_class:"form-check-input" }}
                   <label class="form-check-label ms-2">{{ form.administra_recursos.label }}</label>
                 </div>
               </div>
+              
+              <div class="col-md-4 d-flex align-items-center mb-3">
+                <div class="form-check">
+                  {{ form.carnet_unico_discapacidad|add_class:"form-check-input" }}
+                  <label class="form-check-label ms-2">{{ form.carnet_unico_discapacidad.label }}</label>
+                </div>
+              </div>
+
             </div>
 
-            <h6 class="border-bottom pb-2 mb-3">Carnet discapacidad y situación habitacional</h6>
+            <h6 class="border-bottom pb-2 mb-3 mt-3">Carnet discapacidad y situación habitacional</h6>
             <div class="row">
               <div class="col-md-6 mb-3">
                 {{ form.carnet_discapacidad.label_tag }}
@@ -229,7 +241,7 @@
             <a href="{% url 'persona:persona_list' %}" class="btn btn-outline-secondary">Cancelar</a>
           {% endif %}
         </div>
-      </form>
+      </form> 
     </div>
   </div>
 </div>

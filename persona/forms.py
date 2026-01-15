@@ -12,9 +12,11 @@ class PersonaForm(forms.ModelForm):
             'genero', 'telefono', 'email', 'direccion_calle', 'direccion_numero',
             'direccion_piso', 'direccion_depto', 'localidad', 'ciudad_nacimiento',
             'nivel_educativo', 'ocupacion', 'posee_cobertura_salud', 'cobertura_salud',
-            'posee_grupo_apoyo', 'grupo_apoyo', 'derecho_seguridad_social',
+            'posee_grupo_apoyo', 'grupo_apoyo', 
             'administra_recursos', 'carnet_discapacidad', 'situacion_habitacional',
-            'observaciones', 'estado'
+            'observaciones', 'estado', 'carnet_unico_discapacidad',
+
+            # 'derecho_seguridad_social', Este campo se eliminó del formulario
         ]
         widgets = {
             'tipo_documento': forms.Select(attrs={'class': 'form-control form-control-sm'}),
@@ -53,7 +55,7 @@ class PersonaForm(forms.ModelForm):
                                                                         border: 1px solid rgba(128, 128, 128, 1);"""}),
             'grupo_apoyo': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
             
-            'derecho_seguridad_social': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            #'derecho_seguridad_social': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
             
             'administra_recursos': forms.CheckboxInput(attrs={
                                                             'class': 'form-check-input',
@@ -71,6 +73,13 @@ class PersonaForm(forms.ModelForm):
                                                             cursor: pointer; 
                                                             box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.5); 
                                                             border: 1px solid rgba(128, 128, 128, 1);"""}), 
+
+            'carnet_unico_discapacidad': forms.CheckboxInput(attrs={
+                                                'class': 'form-check-input',
+                                                'style': """transform: scale(1.5); 
+                                                            cursor: pointer; 
+                                                            box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.5); 
+                                                            border: 1px solid rgba(128, 128, 128, 1);"""}),                                                            
         }
         labels = {
             'tipo_documento': 'Tipo de documento',
@@ -93,12 +102,13 @@ class PersonaForm(forms.ModelForm):
             'cobertura_salud': 'Cobertura de salud',
             'posee_grupo_apoyo': '¿Tiene grupo de apoyo?',
             'grupo_apoyo': 'Grupo de apoyo',
-            'derecho_seguridad_social': 'Derechos de seguridad social',
+            #'derecho_seguridad_social': 'Derechos de seguridad social', Este campo se eliminó del formulario
             'administra_recursos': '¿Administra recursos?',
-            'carnet_discapacidad': 'Carnet de discapacidad',
+            'carnet_discapacidad': 'Diagnóstico consignado', # Se cambió la etiqueta Carnet de discapacidad por Diagnóstico consignado
             'situacion_habitacional': 'Situación habitacional',
             'observaciones': 'Observaciones',
             'estado': 'Estado',
+            'carnet_unico_discapacidad': '¿Posee carnet único de discapacidad?',
         }
         
 

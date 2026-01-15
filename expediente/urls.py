@@ -25,6 +25,7 @@ from .views import (
     buscar_personas,
     EstadisticasRangoFechasView,
     ExpedienteInstitucionCreateByIdView,
+    ExpedientePersonaCreateByIdView
 )
 
 app_name = 'expediente'
@@ -49,6 +50,7 @@ urlpatterns = [
     path('secretaria/<int:pk>/detalle/', SecretariaDetailView.as_view(), name='secretaria_detail'),
     path('expediente/crear_institucion/', ExpedienteInstitucionCreateView.as_view(), name='expediente_institucion_create'),
     path('expediente/crear_institucion_by_id/<int:expediente_id>/', ExpedienteInstitucionCreateByIdView.as_view(), name='expediente_institucion_create_by_id'),
+    path('expediente/crear_persona_by_id/<int:expediente_id>/', ExpedientePersonaCreateByIdView.as_view(), name='expediente_persona_create_by_id'),
     path('expediente/institucion/', ExpedienteInstitucionListView.as_view(), name='expediente_institucion_list'),
     path('expediente/persona/agregar/', ExpedientePersonaCreateView.as_view(), name='expediente_persona_create'),
     path('expediente/persona/', ExpedientePersonaListView.as_view(), name='expediente_persona_list'),

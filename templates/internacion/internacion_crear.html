@@ -85,11 +85,12 @@
             </h6>
 
             <div class="row g-3 mb-3 align-items-center">
-              <div class="col-md-5">
+              {% comment %}
+                <div class="col-md-5">
                 <label class="form-label fw-semibold">{{ form.requisitos.label }}</label>
                 {{ form.requisitos|add_class:"form-control" }}
-              </div>
-
+              </div>  
+              {% endcomment %}
               <div class="col-md-3">
                 <div class="form-check mt-4">
                   {{ form.intento_suicidio|add_class:"form-check-input" }}
@@ -120,11 +121,15 @@
                 {{ form.tipo_adiccion|add_class:"form-control" }}
               </div>
 
-              <div class="col-md-5">
-                <label class="form-label fw-semibold">{{ form.fecha_cumplimiento.label }}</label>
-                {{ form.fecha_cumplimiento|add_class:"form-control" }}
-              </div>
+              
             </div>
+            <div class="row g-3 mb-3 align-items-center">
+                <div class="col-md-5">
+                  <label class="form-label fw-semibold">{{ form.fecha_cumplimiento.label }}</label>
+                  {{ form.fecha_cumplimiento|add_class:"form-control" }}
+                </div>
+            </div>
+
 
             <div class="mb-3">
               <label class="fw-semibold">

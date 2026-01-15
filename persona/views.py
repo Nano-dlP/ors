@@ -127,3 +127,18 @@ def desactivar_persona(request, pk):
         persona.save()
         messages.success(request, "Persona activada correctamente.")
         return redirect('persona:persona_list')
+    
+
+@login_required(login_url='core:login')
+@permission_required('persona.add_persona', login_url='core:login', raise_exception=True)
+def listar_persona_by_id(request):
+    personas = Persona.objects.filter(estado=True).order_by('apellido', 'nombre')
+    next_url = request.GET.get("next")       # para redirigir después
+    expediente_id = request.GET.get("expediente_id")   # <--- ESTA LÍNEA ES CLAVE
+
+    return render(request, "persona/persona_agregar_expediente_by_id.html",{ 
+        "personas": personas,
+        "next_url": next_url,
+        "expediente_id": expediente_id,   # <--- ASEGÚRATE DE PASARLO AL TEMPLATE
+    })
+

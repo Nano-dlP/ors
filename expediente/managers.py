@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.utils.timezone import make_aware, datetime
 
 class ExpedienteManager(models.Manager):
@@ -48,3 +49,11 @@ class ExpedienteManager(models.Manager):
     def cantidad_expedientes(self):
         """Devuelve la cantidad total de expedientes."""
         return self.count()
+    
+    def estadisticas_por_sede(self, sede):
+        """
+        Devuelve expedientes asociados a una sede específica.
+        Acepta objeto Sede o string (nombre de la sede).
+        """
+        if hasattr(sede, "pk"):  # si es un objeto Sede
+            return self.filter(sede=sede).aggregate(Count('id'))

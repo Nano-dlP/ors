@@ -124,6 +124,7 @@ def listar_institucion_by_id(request):
     })
 
 
+
 @login_required(login_url='core:login')
 @permission_required('institucion.delete_institucion', login_url='core:login', raise_exception=True)
 def desactivar_institucion(request, pk):

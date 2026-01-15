@@ -35,6 +35,7 @@ class Persona(models.Model):
     situacion_habitacional = models.CharField(max_length=100, verbose_name=("Situación habitacional"), blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True, verbose_name=("Estado"))
+    carnet_unico_discapacidad = models.BooleanField(default=False, verbose_name=("Carnet único de discapacidad"))
 
     #Establezco la conexión a la clase
     objects = PersonaManagers()
@@ -49,3 +50,6 @@ class Persona(models.Model):
     
     def get_full_name(self):
         return f"{self.nombre} {self.apellido}"
+
+
+    
