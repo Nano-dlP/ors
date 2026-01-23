@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 
 from expediente.models import ExpedienteInstitucion
@@ -92,6 +94,22 @@ class Internacion(models.Model):
             self.estado = True
         super().save(*args, **kwargs)
 
+    @property
+    def dias_internado(self):
+        if self.fecha_internacion and not self.fecha_alta:
+            return (timezone.now().date() - self.fecha_internacion).days
+        return (self.fecha_alta - self.fecha_internacion).days
+
+    @property
+    def nivel_internacion(self):
+        dias = self.dias_internado
+        if dias is None:
+            return None
+        if dias <= 30:
+            return 'success'
+        elif dias <= 90:
+            return 'warning'
+        return 'danger'
 
 
     

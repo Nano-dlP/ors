@@ -25,7 +25,8 @@ from .views import (
     buscar_personas,
     EstadisticasRangoFechasView,
     ExpedienteInstitucionCreateByIdView,
-    ExpedientePersonaCreateByIdView
+    ExpedientePersonaCreateByIdView,
+    listado_view,
 )
 
 app_name = 'expediente'
@@ -58,10 +59,17 @@ urlpatterns = [
     path('api/personas/', buscar_personas, name='buscar_personas'),
 
     path('estadisticas/rango_fecha/', EstadisticasRangoFechasView.as_view(), name='expedientes_rango_fecha'),
+    path('listado/relaciones/', listado_view,name='listado_relaciones'),
+
+
+
+  
 
     # ------------------------------
     # Catch-all para ignorar cualquier texto extra
     # Debe ir al final para no interferir con las rutas específicas
     re_path(r'^expediente/.*$', ExpedienteListView.as_view()),
     re_path(r'^expediente/persona/.*$', ExpedientePersonaListView.as_view()),
+
+
 ]

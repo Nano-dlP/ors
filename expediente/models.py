@@ -185,4 +185,7 @@ class ExpedienteInstitucion(models.Model):
         ]
         
     def __str__(self):
-        return str(self.expediente) 
+        return str(self.expediente)
+    
+
+    

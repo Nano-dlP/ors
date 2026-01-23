@@ -57,3 +57,18 @@ class ExpedienteManager(models.Manager):
         """
         if hasattr(sede, "pk"):  # si es un objeto Sede
             return self.filter(sede=sede).aggregate(Count('id'))
+        
+    def con_relaciones(self):
+        """
+        Devuelve expedientes con personas e instituciones
+        correctamente prefetcheadas para listados/reportes.
+        """
+        return (
+            self.get_queryset()
+            .prefetch_related(
+                'expedientepersona_expediente__persona',
+                'expedientepersona_expediente__rol',
+                'expedienteinstitucion_expediente__institucion',
+                'expedienteinstitucion_expediente__rol',
+            )
+        )

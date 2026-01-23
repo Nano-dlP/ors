@@ -1,0 +1,126 @@
+{% extends "core/index.html" %}
+{% load static %}
+
+{% block page_content %}
+<div class="container-fluid mt-4">
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">
+        <i class="fas fa-folder-open me-2"></i>
+        Listado de Expedientes – Personas e Instituciones
+      </h5>
+    </div>
+
+    <div class="card-body">
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle" id="tabla-expedientes">
+          <thead class="table-dark">
+            <tr>
+              <th>Expediente</th>
+              <th>Institución</th>
+              <th>Rol Institución</th>
+              <th>Persona</th>
+              <th>Rol Persona</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+              <tr>
+                <td>{{ row.expediente }}</td>
+
+                <td>
+                  {% if row.institucion %}
+                    {{ row.institucion }}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if row.rol_institucion %}
+                    <span class="badge bg-info text-dark">
+                      {{ row.rol_institucion }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if row.persona %}
+                    {{ row.persona }}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if row.rol_persona %}
+                    <span class="badge bg-secondary">
+                      {{ row.rol_persona }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">
+                  No hay registros para mostrar
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block js_page %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    let table = $('#tabla-expedientes').DataTable({
+        pageLength: 5,
+        lengthMenu: [5, 10, 20, 50],
+        language: { url: "{% static 'js/es-ES.json' %}" },
+        dom: "Bflrtip",
+        responsive: true,
+        buttons: [
+            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
+            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
+            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
+            { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
+            { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
+        ]
+    });
+
+    // Toolbar personalizada
+    $('#id_tabla_exp_length').addClass('me-2').appendTo('#dt-toolbar-container');
+    table.buttons().container().addClass('me-2').appendTo('#dt-toolbar-container');
+    $('#id_tabla_exp_filter').addClass('ms-auto').appendTo('#dt-toolbar-container');
+});
+</script>
+{% endblock js_page %}

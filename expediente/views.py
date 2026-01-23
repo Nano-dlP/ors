@@ -1512,6 +1512,29 @@ def buscar_expediente(request):
     })
 
 
+@login_required(login_url='core:login')
+@permission_required('expediente.view_expediente', login_url='core:login', raise_exception=True)
+def listado_view(request):
+    expedientes = Expediente.objects.con_relaciones()
+
+    rows = []
+
+    for exp in expedientes:
+        personas = exp.expedientepersona_expediente.all()
+        instituciones = exp.expedienteinstitucion_expediente.all()
+
+        for ei in instituciones:
+            for ep in personas:
+                rows.append({
+                    'expediente': exp,
+                    'institucion': ei.institucion,
+                    'rol_institucion': ei.rol,
+                    'persona': ep.persona,
+                    'rol_persona': ep.rol,
+                })
+
+    return render(request, 'expediente/expediente_listado.html', {'rows': rows})
+
 ###########################################
 ####Estadisticas de Expedientes############
 ###########################################
@@ -1536,4 +1559,6 @@ class EstadisticasPorSedeView(LoginRequiredMixin, PermissionRequiredMixin, ListV
 
     def get_queryset(self):
         sede = self.request.GET.get('sede')
-        return Expediente.objects.estadisticas_por_sede()      
+        return Expediente.objects.estadisticas_por_sede()
+    
+
