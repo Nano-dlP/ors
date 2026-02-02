@@ -56,20 +56,20 @@
               <tbody>
                 {% for internacion in internaciones %}
                     <tr>
-                      <td>{{ internacion.expediente_institucion|default:"-" }}</td>
+                      <td>{{ internacion.expediente_institucion|default_if_none:"-" }}</td>
                       <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
                       <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
                       <td>
-                        {% if internacion.dias_internado %}
+                          {% if internacion.dias_internado %}
                           {% if internacion.dias_internado > 30 and internacion.dias_internado < 90 %}
-                          <span class="badge bg-{{ internacion.nivel_internacion }} text-dark fs-6">
-                        {{ internacion.dias_internado }} días
-                        </span>
-                        {% else %}
-                          <span class="badge bg-{{ internacion.nivel_internacion }} fs-6">
-                        {{ internacion.dias_internado }} días  
-                        {% endif %}
-                        
+                            <span class="badge bg-{{ internacion.nivel_internacion|default:'secondary' }} text-dark fs-6">
+                              {{ internacion.dias_internado }} días
+                            </span>
+                          {% else %}
+                            <span class="badge bg-{{ internacion.nivel_internacion|default:'secondary' }} fs-6">
+                              {{ internacion.dias_internado }} días
+                            </span>
+                          {% endif %}
                           {% endif %}
                       </td>
                       <td class="text-center">
