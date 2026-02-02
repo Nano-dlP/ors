@@ -34,6 +34,7 @@
               <thead class="table-light text-center align-middle">
                 <tr>
                   <th>Expediente</th>
+                  <th>D.N.I.</th>
                   <th>Persona</th>
                   <th>Rol</th>
                 </tr>
@@ -42,6 +43,7 @@
                 {% for exp in expediente_personas %}
                   <tr class="text-center">
                     <td class="fw-semibold">{{ exp.expediente }}</td>
+                    <td>{{ exp.persona.numero_documento }}</td>
                     <td>{{ exp.persona }}</td>
                     <td>{{ exp.rol }}</td>
                   </tr>

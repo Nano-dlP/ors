@@ -147,14 +147,14 @@ class ExpedienteUpdateDispatcherView(LoginRequiredMixin, PermissionRequiredMixin
             "OFICIO PAPEL",
             "DERIVACION",
             "MAIL EFECTOR",
-            "COMUNICACION TELEFONICA EQUIPO TRATANTE",
+            "SOLICITUD EQUIPO DE REFERENCIA",
         ]
 
         if medio == "DEMANDA ESPONTANEA":
             return redirect('expediente:demanda_espontanea_update', pk=pk)
         elif medio in medios_oficio:
             return redirect('expediente:oficio_update', pk=pk)
-        elif medio == "SOLICITUD SECRETARIA EJECUTIVA (DE OFICIO)":
+        elif medio == "SOLICITUD SECRETARIA EJECUTIVA":
             return redirect('expediente:secretaria_update', pk=pk)
         else:
             # Si no reconoce el medio, muestra error
@@ -180,14 +180,14 @@ class ExpedienteDetailDispatcherView(LoginRequiredMixin, PermissionRequiredMixin
             "OFICIO PAPEL",
             "DERIVACION",
             "MAIL EFECTOR",
-            "COMUNICACION TELEFONICA EQUIPO TRATANTE",
+            "SOLICITUD EQUIPO DE REFERENCIA",
         ]
 
         if medio == "DEMANDA ESPONTANEA":
             return redirect('expediente:demanda_espontanea_detail', pk=pk)
         elif medio in medios_oficio:
             return redirect('expediente:oficio_detail', pk=pk)
-        elif medio == "SOLICITUD SECRETARIA EJECUTIVA (DE OFICIO)":
+        elif medio == "SOLICITUD SECRETARIA EJECUTIVA":
             return redirect('expediente:secretaria_detail', pk=pk)
         else:
             # Si no reconoce el medio, muestra error
@@ -483,8 +483,11 @@ class DemandaEspontaneaDetailView(DetailView):
         # Documentos asociados al expediente
         context["documentos"] = ExpedienteDocumento.objects.filter(expediente=self.object)
         # Persona principal (rol=1) asociada al expediente
-        persona_rel = ExpedientePersona.objects.filter(expediente=self.object, rol__pk=1).first()
-        context["persona"] = persona_rel.persona if persona_rel else None
+        persona_rel = ExpedientePersona.objects.filter(
+            expediente=self.object
+        ).select_related("persona", "rol").first()
+
+        context["persona_rel"] = persona_rel
         return context
 
 

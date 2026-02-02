@@ -77,6 +77,7 @@ class DemandaEspontanea(forms.Form):
     edad_persona = forms.IntegerField(
         label="Edad de la persona:",
         min_value=0,
+        required=False,
         widget=forms.NumberInput(attrs={'class': 'form-control '})
     )
     situacion_habitacional_hist = forms.CharField(
@@ -159,6 +160,7 @@ class OficioForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     fecha_de_juzgado = forms.DateField(
+        required=False,
         label="Fecha de ingreso al juzgado:",
         widget=forms.DateInput(
             format='%Y-%m-%d',

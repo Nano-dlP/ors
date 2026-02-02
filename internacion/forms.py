@@ -49,7 +49,7 @@ class InternacionForm(forms.ModelForm):
             'motivo_alta': 'Motivo de alta',
             'tipo_internacion': 'Tipo de internación',
             #'requisitos': 'Requisitos',
-            'intento_suicidio': 'Intento de suicidio',
+            'intento_suicidio': 'Problemática de suicidio',
             'modalidad_suicidio': 'Modalidad de suicidio',
             'posee_adiccion': 'Consumo problemático',
             'tipo_adiccion': 'Tipo de adicción',

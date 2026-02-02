@@ -163,6 +163,7 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'salud_mental.wsgi.application'
 
 # Database: se esperan valores en variables de entorno (.env)

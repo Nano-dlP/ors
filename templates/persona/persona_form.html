@@ -54,14 +54,23 @@
               <div class="col-md-4 mb-3">
                 {{ form.tipo_documento.label_tag }}
                 {{ form.tipo_documento }}
-              </div>
+                  {% if form.tipo_documento.errors %}
+                  <div class="invalid-feedback d-block">{{ form.tipo_documento.errors|striptags }}</div>
+                  {% endif %}
+                </div>
               <div class="col-md-4 mb-3">
                 {{ form.numero_documento.label_tag }}
                 {{ form.numero_documento }}
+                {% if form.numero_documento.errors %}
+                  <div class="invalid-feedback d-block">{{ form.numero_documento.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-4 mb-3">
                 {{ form.fecha_nacimiento.label_tag }}
                 {{ form.fecha_nacimiento }}
+                {% if form.fecha_nacimiento.errors %}
+                  <div class="invalid-feedback d-block">{{ form.fecha_nacimiento.errors|striptags }}</div>
+                  {% endif %}
               </div>
             </div>
 
@@ -69,10 +78,16 @@
               <div class="col-md-6 mb-3">
                 {{ form.nombre.label_tag }}
                 {{ form.nombre }}
+                {% if form.nombre.errors %}
+                  <div class="invalid-feedback d-block">{{ form.nombre.errors|striptags }}</div>
+                {% endif %}
               </div>
               <div class="col-md-6 mb-3">
                 {{ form.apellido.label_tag }}
                 {{ form.apellido }}
+                {% if form.apellido.errors %}
+                  <div class="invalid-feedback d-block">{{ form.apellido.errors|striptags }}</div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -87,14 +102,23 @@
               <div class="col-md-3 mb-3">
                 {{ form.genero.label_tag }}
                 {{ form.genero }}
+                {% if form.genero.errors %}
+                  <div class="invalid-feedback d-block">{{ form.genero.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-3 mb-3">
                 {{ form.telefono.label_tag }}
                 {{ form.telefono }}
+                {% if form.telefono.errors %}
+                  <div class="invalid-feedback d-block">{{ form.telefono.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-6 mb-3">
                 {{ form.email.label_tag }}
                 {{ form.email }}
+                {% if form.email.errors %}
+                  <div class="invalid-feedback d-block">{{ form.email.errors|striptags }}</div>
+                  {% endif %}
               </div>
             </div>
 
@@ -102,18 +126,30 @@
               <div class="col-md-5 mb-3">
                 {{ form.direccion_calle.label_tag }}
                 {{ form.direccion_calle }}
+              {% if form.direccion_calle.errors %}
+                  <div class="invalid-feedback d-block">{{ form.direccion_calle.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-3 mb-3">
                 {{ form.direccion_numero.label_tag }}
-                {{ form.direccion_numero }}
+                {{ form.direccion_numero }} 
+              {% if form.direccion_numero.errors %}
+                  <div class="invalid-feedback d-block">{{ form.direccion_numero.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-2 mb-3">
                 {{ form.direccion_piso.label_tag }}
                 {{ form.direccion_piso }}
+              {% if form.direccion_piso.errors %}
+                  <div class="invalid-feedback d-block">{{ form.direccion_piso.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-2 mb-3">
                 {{ form.direccion_depto.label_tag }}
                 {{ form.direccion_depto }}
+              {% if form.direccion_depto.errors %}
+                  <div class="invalid-feedback d-block">{{ form.direccion_depto.errors|striptags }}</div>
+                  {% endif %}
               </div>
             </div>
 
@@ -121,10 +157,16 @@
               <div class="col-md-6 mb-3">
                 {{ form.localidad.label_tag }}
                 {{ form.localidad }}
+              {% if form.localidad.errors %}
+                  <div class="invalid-feedback d-block">{{ form.localidad.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-6 mb-3">
                 {{ form.ciudad_nacimiento.label_tag }}
                 {{ form.ciudad_nacimiento }}
+              {% if form.ciudad_nacimiento.errors %}
+                  <div class="invalid-feedback d-block">{{ form.ciudad_nacimiento.errors|striptags }}</div>
+                  {% endif %}
               </div>
             </div>
 
@@ -132,10 +174,16 @@
               <div class="col-md-6 mb-3">
                 {{ form.nivel_educativo.label_tag }}
                 {{ form.nivel_educativo }}
+              {% if form.nivel_educativo.errors %}
+                  <div class="invalid-feedback d-block">{{ form.nivel_educativo.errors|striptags }}</div>
+                  {% endif %}
               </div>
               <div class="col-md-6 mb-3">
                 {{ form.ocupacion.label_tag }}
                 {{ form.ocupacion }}
+              {% if form.ocupacion.errors %}
+                  <div class="invalid-feedback d-block">{{ form.ocupacion.errors|striptags }}</div>
+                   {% endif %}
               </div>
             </div>
           </div>
@@ -151,12 +199,16 @@
                 <div class="form-check">
                   {{ form.posee_cobertura_salud|add_class:"form-check-input" }}
                   <label class="form-check-label ms-2">{{ form.posee_cobertura_salud.label }}</label>
+
                 </div>
               </div>
 
               <div class="col-md-4 mb-3" id="cobertura_salud_container">
                 {{ form.cobertura_salud.label_tag }}
                 {% render_field form.cobertura_salud class="form-control" %}
+                {% if form.cobertura_salud.errors %}
+                  <div class="invalid-feedback d-block">{{ form.cobertura_salud.errors|striptags }}</div>
+                  {% endif %}
               </div>
 
               <div class="col-md-2 d-flex align-items-center mb-3">
@@ -169,6 +221,9 @@
               <div class="col-md-4 mb-3" id="grupo_apoyo_container">
                 {{ form.grupo_apoyo.label_tag }}
                 {% render_field form.grupo_apoyo class="form-control" %}
+                {% if form.grupo_apoyo.errors %}
+                  <div class="invalid-feedback d-block">{{ form.grupo_apoyo.errors|striptags }}</div>
+                  {% endif %}
               </div>
             </div>
           </div>
@@ -185,6 +240,9 @@
               <div class="col-md-6 mb-3">
                 {{ form.derecho_seguridad_social.label_tag }}
                 {% render_field form.derecho_seguridad_social class="form-control" %}
+              {% if form.derecho_seguridad_social.errors %}
+                  <div class="invalid-feedback d-block">{{ form.derecho_seguridad_social.errors|striptags }}</div>
+                  {% endif %}
               </div>
 
             {% endcomment %}
@@ -193,6 +251,9 @@
                 <div class="form-check">
                   {{ form.administra_recursos|add_class:"form-check-input" }}
                   <label class="form-check-label ms-2">{{ form.administra_recursos.label }}</label>
+                  {% if form.administra_recursos.errors %}
+                  <div class="invalid-feedback d-block">{{ form.administra_recursos.errors|striptags }}</div>
+                  {% endif %}
                 </div>
               </div>
               
@@ -200,6 +261,9 @@
                 <div class="form-check">
                   {{ form.carnet_unico_discapacidad|add_class:"form-check-input" }}
                   <label class="form-check-label ms-2">{{ form.carnet_unico_discapacidad.label }}</label>
+                  {% if form.carnet_unico_discapacidad.errors %}
+                  <div class="invalid-feedback d-block">{{ form.carnet_unico_discapacidad.errors|striptags }}</div>
+                  {% endif %}
                 </div>
               </div>
 
@@ -210,11 +274,17 @@
               <div class="col-md-6 mb-3">
                 {{ form.carnet_discapacidad.label_tag }}
                 {% render_field form.carnet_discapacidad class="form-control" %}
+              {% if form.carnet_discapacidad.errors %}
+                  <div class="invalid-feedback d-block">{{ form.carnet_discapacidad.errors|striptags }}</div>
+                  {% endif %}
               </div>
 
               <div class="col-md-6 mb-3">
                 {{ form.situacion_habitacional.label_tag }}
                 {% render_field form.situacion_habitacional class="form-control" %}
+              {% if form.situacion_habitacional.errors %}
+                  <div class="invalid-feedback d-block">{{ form.situacion_habitacional.errors|striptags }}</div>
+                   {% endif %}
               </div>
             </div>
           </div>
