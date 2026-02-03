@@ -96,8 +96,15 @@ class Internacion(models.Model):
 
     @property
     def dias_internado(self):
-        if self.fecha_internacion and not self.fecha_alta:
+        # Si no hay fecha de internación, no se puede calcular
+        if not self.fecha_internacion:
+            return None
+
+        # Si sigue internado
+        if not self.fecha_alta:
             return (timezone.now().date() - self.fecha_internacion).days
+
+        # Si tiene fecha de alta
         return (self.fecha_alta - self.fecha_internacion).days
 
     @property
