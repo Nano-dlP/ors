@@ -129,6 +129,11 @@ class IntervencionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
     permission_required = 'intervencion.change_intervencion'
     raise_exception = False  # devuelve 403 si no tiene permiso
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['editar'] = True  # Indicador para el template
+        return context
+
 
 
 class IntervencionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

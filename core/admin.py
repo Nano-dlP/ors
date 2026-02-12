@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Pais, Provincia, Genero, Nivel_Educativo, Tipo_Documento, Sede, Localidad, Rol, AreaProfesional, Profesion
+from .models import Pais, Provincia, Genero, Nivel_Educativo, Tipo_Documento, Sede, Localidad, Rol, AreaProfesional, Profesion, SituacionHabitacional
 from .models import ClienteLog
 # Register your models here.
 
@@ -14,6 +14,7 @@ admin.site.register(Localidad)
 admin.site.register(Rol)
 admin.site.register(AreaProfesional)
 admin.site.register(Profesion)
+admin.site.register(SituacionHabitacional)
 
 admin.site.site_header = 'Salud Mental Admin'
 admin.site.site_title = 'Salud Mental Admin Portal'

@@ -48,6 +48,7 @@
                   <th>Exp. Institución</th>
                   <th>Fecha de ingreso</th>
                   <th>Fecha externación o derivación</th>
+                  <th>Fecha de cumplimiento</th>
                   <th>Días Internado</th>
                   <th class="text-center">Estado</th>
                   <th class="text-center">Acciones</th>
@@ -59,6 +60,7 @@
                       <td>{{ internacion.expediente_institucion|default_if_none:"-" }}</td>
                       <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
                       <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
+                      <td>{{ internacion.fecha_cumplimiento|date:"d/m/Y"|default:"-" }}</td>
                       <td>
                           {% if internacion.dias_internado %}
                           {% if internacion.dias_internado > 30 and internacion.dias_internado < 90 %}

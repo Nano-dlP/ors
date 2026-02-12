@@ -80,5 +80,7 @@ class IntervencionCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['expediente'].disabled = True
         self.fields['fecha_intervencion'].input_formats = ['%Y-%m-%d']
         self.fields['observacion'].widget.attrs['placeholder'] = 'Ingrese observaciones aquí...'

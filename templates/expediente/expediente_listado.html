@@ -21,6 +21,7 @@
               <th>Expediente</th>
               <th>Institución</th>
               <th>Rol Institución</th>
+              <th>Número Documento</th>
               <th>Persona</th>
               <th>Rol Persona</th>
             </tr>
@@ -43,6 +44,13 @@
                     <span class="badge bg-info text-dark">
                       {{ row.rol_institucion }}
                     </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if row.numero_documento %}
+                    {{ row.numero_documento }}
                   {% else %}
                     <span class="text-muted">—</span>
                   {% endif %}

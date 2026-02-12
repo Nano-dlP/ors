@@ -35,21 +35,21 @@
               {{ form.expediente|add_class:"d-none" }} <!-- campo select oculto -->
               <div class="input-group">
                 <input type="text" id="numero_expediente_display" class="form-control input-altura"
-                      value="{% if expediente_seleccionado %}{{ expediente_seleccionado.identificador }}{% endif %}"
+                      value="{% if form.instance.pk and form.instance.expediente %}{{ form.instance.expediente.identificador }}{% elif expediente_seleccionado %}{{ expediente_seleccionado.identificador }}{% endif %}"
                       placeholder="Seleccione expediente"
-                      {% if editar %}readonly{% endif %}>
-                        <a href="{% url 'expediente:expediente_buscar' %}?next={{ request.path }}"
-                          class="btn btn-outline-secondary rounded-end"
-                            title="Buscar expediente"
-                              {% if editar %}onclick="return false;" style="pointer-events: none; opacity: 0.5;"{% endif %}>
-                            <i class="fas fa-search"></i>
-                        </a>
+                      {% if form.instance.pk %}readonly disabled{% endif %}>
+                <button type="button"
+                  class="btn btn-outline-secondary rounded-end"
+                  title="Buscar expediente"
+                  {% if form.instance.pk %}disabled style="cursor: not-allowed;"{% else %}onclick="window.location.href='{% url 'expediente:expediente_buscar' %}?next={{ request.path }}'"{% endif %}>
+                  <i class="fas fa-search"></i>
+                </button>
               </div>
-                  {% if form.expediente.errors %}
-                    <div class="text-danger small mt-1">
-                      {{ form.expediente.errors }}
-                    </div>
-                  {% endif %}
+              {% if form.expediente.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.expediente.errors }}
+                </div>
+              {% endif %}
             </div>
             
             <div class="col-md-4">

@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import Tipo_Documento, Genero,Nivel_Educativo, Localidad
+from core.models import Tipo_Documento, Genero,Nivel_Educativo, Localidad, SituacionHabitacional
 
 #Conecto el modelo con la clase que se encuentra en el managers
 from .managers import PersonaManagers
@@ -32,7 +32,7 @@ class Persona(models.Model):
     derecho_seguridad_social = models.CharField(max_length=100, verbose_name=("Derecho a la seguridad social"), blank=True, null=True)
     administra_recursos = models.BooleanField(default=False, verbose_name=("Administra recursos?"))
     carnet_discapacidad = models.CharField(max_length=50, verbose_name=("Carnet de discapacidad"), blank=True, null=True)
-    situacion_habitacional = models.CharField(max_length=100, verbose_name=("Situación habitacional"), blank=True, null=True)
+    situacion_habitacional = models.ForeignKey(SituacionHabitacional, verbose_name=("Situación habitacional"), on_delete=models.CASCADE, related_name='persona_situacion_habitacional', blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True, verbose_name=("Estado"))
     carnet_unico_discapacidad = models.BooleanField(default=False, verbose_name=("Carnet único de discapacidad"))

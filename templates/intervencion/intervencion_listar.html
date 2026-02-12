@@ -50,6 +50,7 @@
                   <th>Fecha</th>
                   <th>Profesional</th>
                   <th>Tipo</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,7 +60,27 @@
                     <td>{{ intervencion.fecha_intervencion |date:"d/m/Y" }}</td>
                     <td>{{ intervencion.profesional }}</td>
                     <td>{{ intervencion.tipo_intervencion }}</td>
-                    
+                    <td>
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ intervencion.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                          Opciones
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ intervencion.id }}">
+                          
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'intervencion:intervencion_detail' intervencion.id %}" title="Detalles">
+                              <i class="far fa-eye me-2"></i>Detalles
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'intervencion:intervencion_update' intervencion.id %}" title="Editar">
+                              <i class="far fa-edit me-2"></i>Editar
+                            </a>
+                          </li>
+                          
+                        </ul>
+                      </div>
+                    </td>
                   </tr>
                 {% endfor %}
               </tbody>

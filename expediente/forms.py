@@ -219,6 +219,7 @@ class OficioForm(forms.Form):
     edad_persona = forms.IntegerField(
         label="Edad de la persona:",
         min_value=0,
+        required=False,
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     situacion_habitacional_hist = forms.CharField(
@@ -353,6 +354,7 @@ class SecretariaForm(forms.Form):
     edad_persona = forms.IntegerField(
         label="Edad de la persona:",
         min_value=0,
+        required=False,
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     situacion_habitacional_hist = forms.CharField(

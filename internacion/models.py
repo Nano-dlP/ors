@@ -17,6 +17,7 @@ class MotivoInternacion(models.Model):
         verbose_name_plural = "Motivos de Internación"
         ordering = ['-id']
 
+
 class MotivoAlta(models.Model):
     motivo_alta = models.CharField(max_length=50, verbose_name="Motivo de Alta")
     estado = models.BooleanField(default=True)
@@ -55,6 +56,7 @@ class TipoAdiccion(models.Model):
         verbose_name_plural = "Tipos de Adicción"
         ordering = ['-id']
 
+
 class TipoInternacion(models.Model):
     tipo_internacion = models.CharField(max_length=50, verbose_name="Tipo de Internación")
     estado = models.BooleanField(default=True)
@@ -88,11 +90,11 @@ class Internacion(models.Model):
         """
         Si la internación tiene una fecha de alta, se marca como inactiva (estado=False).
         """
-        if self.fecha_alta:
+        if self.fecha_cumplimiento:
             self.estado = False
         else:
             self.estado = True
-        super().save(*args, **kwargs)
+        super(Internacion, self).save(*args, **kwargs)
 
     @property
     def dias_internado(self):
@@ -101,11 +103,11 @@ class Internacion(models.Model):
             return None
 
         # Si sigue internado
-        if not self.fecha_alta:
+        if not self.fecha_cumplimiento:
             return (timezone.now().date() - self.fecha_internacion).days
 
         # Si tiene fecha de alta
-        return (self.fecha_alta - self.fecha_internacion).days
+        return (self.fecha_cumplimiento - self.fecha_internacion).days
 
     @property
     def nivel_internacion(self):

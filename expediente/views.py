@@ -827,7 +827,7 @@ class OficioDetailView(DetailView):
         # Documentos asociados al expediente
         context["documentos"] = ExpedienteDocumento.objects.filter(expediente=self.object)
         # Institución principal (rol=2) asociada al expediente
-        institucion_rel = ExpedienteInstitucion.objects.filter(expediente=self.object, rol__pk=2).first()
+        institucion_rel = ExpedienteInstitucion.objects.filter(expediente=self.object).select_related('institucion', 'rol').first()
         context["institucion"] = institucion_rel.institucion if institucion_rel else None
         return context
 
@@ -1024,6 +1024,8 @@ class SecretariaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, FormView
 
         return context
 
+
+
     def form_valid(self, form):
         # Actualiza el expediente con los nuevos datos
         expediente = self.get_object()
@@ -1062,6 +1064,8 @@ class SecretariaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, FormView
         messages.success(self.request, "El expediente fue actualizado correctamente.")
         return super().form_valid(form)
 
+    
+    
     def form_invalid(self, form):
         # Muestra mensaje si hubo errores, incluyendo los de cada campo
         for field in form:
@@ -1290,6 +1294,7 @@ class ExpedienteInstitucionCreateByIdView(LoginRequiredMixin, PermissionRequired
         return redirect('expediente:expediente_institucion_list')
 
 
+
 class ExpedientePersonaCreateByIdView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = ExpedientePersona
     form_class = ExpedientePersonaForm
@@ -1504,6 +1509,8 @@ def buscar_personas(request):
 def handler403(request, exception=None):
     return render(request, '403.html', status=403)
 
+
+
 def buscar_expediente(request):
     query = request.GET.get('q', '')
     expedientes = Expediente.objects.filter(
@@ -1532,6 +1539,7 @@ def listado_view(request):
                     'expediente': exp,
                     'institucion': ei.institucion,
                     'rol_institucion': ei.rol,
+                    'numero_documento': ep.persona.numero_documento,
                     'persona': ep.persona,
                     'rol_persona': ep.rol,
                 })

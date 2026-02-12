@@ -94,7 +94,7 @@ class Localidad(models.Model):
 
 
     def __str__(self):
-        return self.localidad
+        return self.codigo_postal + " - " + self.localidad
     
     class Meta:
         verbose_name = 'Localidad'
@@ -154,3 +154,15 @@ class Rol (models.Model):
     class Meta:
         verbose_name = 'Rol'
         verbose_name_plural = 'Roles'
+
+
+class SituacionHabitacional(models.Model):
+    situacion_habitacional = models.CharField(max_length=50, verbose_name="Situación Habitacional")
+    
+    def __str__(self):
+        return self.situacion_habitacional
+    
+    class Meta:
+        verbose_name = "Situación Habitacional"
+        verbose_name_plural = "Situaciones Habitacionales"
+        ordering = ['-id']

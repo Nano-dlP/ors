@@ -65,7 +65,7 @@ class PersonaForm(forms.ModelForm):
                                                                         border: 1px solid rgba(128, 128, 128, 1);"""}),
             
             'carnet_discapacidad': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
-            'situacion_habitacional': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            'situacion_habitacional': forms.Select(attrs={'class': 'form-control form-control-sm'}),
             'observaciones': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 3}),
             'estado': forms.CheckboxInput(attrs={
                                                 'class': 'form-check-input',
@@ -108,7 +108,7 @@ class PersonaForm(forms.ModelForm):
             'situacion_habitacional': 'Situación habitacional',
             'observaciones': 'Observaciones',
             'estado': 'Estado',
-            'carnet_unico_discapacidad': '¿Posee carnet único de discapacidad?',
+            'carnet_unico_discapacidad': '¿Posee certificado único de discapacidad?', # Se cambió la etiqueta Carnet único de discapacidad por ¿Posee certificado único de discapacidad?    
         }
         
 
