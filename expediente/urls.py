@@ -27,6 +27,7 @@ from .views import (
     ExpedienteInstitucionCreateByIdView,
     ExpedientePersonaCreateByIdView,
     listado_view,
+    expediente_inst_rel_pers_rel_view,
 )
 
 app_name = 'expediente'
@@ -60,6 +61,7 @@ urlpatterns = [
 
     path('estadisticas/rango_fecha/', EstadisticasRangoFechasView.as_view(), name='expedientes_rango_fecha'),
     path('listado/relaciones/', listado_view,name='listado_relaciones'),
+    path('expediente/<int:expediente_id>/relaciones/', expediente_inst_rel_pers_rel_view, name='expediente_relaciones'),
 
 
 

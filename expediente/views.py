@@ -1573,3 +1573,12 @@ class EstadisticasPorSedeView(LoginRequiredMixin, PermissionRequiredMixin, ListV
         return Expediente.objects.estadisticas_por_sede()
     
 
+def expediente_inst_rel_pers_rel_view(request, expediente_id):
+    expediente = get_object_or_404(Expediente, pk=expediente_id)
+    personas_relacionadas = expediente.expedientepersona_expediente.all()
+    instituciones_relacionadas = expediente.expedienteinstitucion_expediente.all()  # Corrección del typo
+    return render(request, 'expediente/expediente_inst_pers_rel.html', {
+        'expediente': expediente,
+        'personas_relacionadas': personas_relacionadas,
+        'instituciones_relacionadas': instituciones_relacionadas,  # Corrección del typo
+    })

@@ -1,0 +1,229 @@
+{% extends "core/index.html" %}
+{% load static %}
+
+{% block page_content %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Encabezado con botones de acción -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>
+          <i class="fas fa-folder-open me-2"></i>
+          Expediente {{ expediente.identificador }}
+        </h3>
+        <div class="btn-group" role="group">
+          <a href="{% url 'expediente:expediente_update' expediente.id %}" class="btn btn-sm btn-warning">
+            <i class="fas fa-edit me-1"></i>Editar
+          </a>
+          <a href="{% url 'expediente:expediente_list' %}" class="btn btn-sm btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver
+          </a>
+        </div>
+      </div>
+
+      <!-- Datos principales del expediente -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Datos del Expediente</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Identificador:</label>
+              <p class="fw-bold">{{ expediente.identificador }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Número:</label>
+              <p>{{ expediente.numero }}/{{ expediente.anio }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Abreviatura:</label>
+              <p>{{ expediente.abreviatura }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Fecha de Creación:</label>
+              <p>{{ expediente.fecha_creacion|date:"d/m/Y" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Sede:</label>
+              <p>{{ expediente.sede }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Estado:</label>
+              <p>
+                <span class="badge bg-{% if expediente.estado %}success{% else %}danger{% endif %}">
+                  {{ expediente.estado_expediente }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Tipo de Solicitud:</label>
+              <p>{{ expediente.tipo_solicitud }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Medio de Ingreso:</label>
+              <p>{{ expediente.medio_ingreso|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Expediente Físico:</label>
+              <p>
+                {% if expediente.expediente_fisico %}
+                  <span class="badge bg-info">Sí</span>
+                {% else %}
+                  <span class="badge bg-secondary">No</span>
+                {% endif %}
+              </p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Fecha del Juzgado:</label>
+              <p>{{ expediente.fecha_de_juzgado|date:"d/m/Y"|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Fecha de Recepción:</label>
+              <p>{{ expediente.fecha_de_recepcion|date:"d/m/Y"|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">CUIJ:</label>
+              <p>{{ expediente.cuij|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Clave SISFE:</label>
+              <p>{{ expediente.clave_sisfe|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Tipo de Patrocinio:</label>
+              <p>{{ expediente.tipo_patrocinio|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Resumen de Intervención:</label>
+              <p>{{ expediente.resumen_intervencion|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Edad de la Persona:</label>
+              <p>{{ expediente.edad_persona|default:"—" }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="text-muted small">Grupo Etario:</label>
+              <p>{{ expediente.grupo_etario }}</p>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="text-muted small">Situación Habitacional Histórica:</label>
+              <p>{{ expediente.situacion_habitacional_hist|default:"—" }}</p>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="text-muted small">Observaciones:</label>
+              <p>{{ expediente.observaciones|default:"—" }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personas Relacionadas -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-users me-2"></i>Personas Relacionadas</h5>
+          <a href="{% url 'expediente:expediente_persona_create_by_id' expediente.id %}?expediente={{ expediente.id }}" 
+             class="btn btn-sm btn-light">
+            <i class="fas fa-plus me-1"></i>Agregar Persona
+          </a>
+        </div>
+        <div class="card-body">
+          {% if personas_relacionadas %}
+            <div class="table-responsive">
+              <table class="table table-hover table-striped align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Apellido y Nombre</th>
+                    <th>DNI</th>
+                    <th>Rol</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ep in personas_relacionadas %}
+                    <tr>
+                      <td>
+                        <strong>{{ ep.persona.apellido }}, {{ ep.persona.nombre }}</strong>
+                      </td>
+                      <td>{{ ep.persona.dni|default:"—" }}</td>
+                      <td>
+                        <span class="badge bg-primary">{{ ep.rol }}</span>
+                      </td>
+                      <td>{{ ep.persona.email|default:"—" }}</td>
+                      <td>{{ ep.persona.telefono|default:"—" }}</td>
+                      <td>
+                        <a href="{% url 'persona:persona_detail' ep.persona.id %}" 
+                           class="btn btn-sm btn-outline-info" 
+                           title="Ver detalles">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-warning mb-0" role="alert">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              No hay personas relacionadas a este expediente.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Instituciones Relacionadas -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-building me-2"></i>Instituciones Relacionadas</h5>
+          <a href="{% url 'expediente:expediente_institucion_create_by_id' expediente.id %}?expediente={{ expediente.id }}" 
+             class="btn btn-sm btn-light">
+            <i class="fas fa-plus me-1"></i>Agregar Institución
+          </a>
+        </div>
+        <div class="card-body">
+          {% if instituciones_relacionadas %}
+            <div class="table-responsive">
+              <table class="table table-hover table-striped align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Nombre de la Institución</th>
+                    <th>Rol</th>
+                  
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ei in instituciones_relacionadas %}
+                    <tr>
+                      <td><strong>{{ ei.institucion }}</strong></td>
+                      <td>
+                        <span class="badge bg-warning text-dark">{{ ei.rol }}</span>
+                      </td>
+                 
+                      <td>
+                        <a href="{% url 'institucion:institucion_detail' ei.institucion.id %}" 
+                           class="btn btn-sm btn-outline-info" 
+                           title="Ver detalles">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-warning mb-0" role="alert">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              No hay instituciones relacionadas a este expediente.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
