@@ -335,6 +335,7 @@
             <i class="fas fa-plus me-1"></i>Agregar Persona
           </a>
         </div>
+        
         <div class="card-body">
           {% if personas_relacionadas %}
             <table class="table table-hover table-striped align-middle mb-0 table-sm">
@@ -400,7 +401,6 @@
                   <th>Localidad</th>
                   <th>Teléfono</th>
                   <th>Correo</th>
-                  <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -414,7 +414,6 @@
                     <td>{{ ei.institucion.localidad|default:"—" }}</td>
                     <td>{{ ei.institucion.telefono|default:"—" }}</td>
                     <td>{{ ei.institucion.email|default:"—" }}</td>
-                    <td>{{ ei.institucion.estado|default:"—" }}</td>
                     <td>
                       <a href="{% url 'institucion:institucion_detail' ei.institucion.id %}" 
                          class="btn btn-sm btn-outline-info" 

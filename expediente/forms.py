@@ -267,7 +267,6 @@ class OficioForm(forms.Form):
             self.fields['sede'].disabled = True
 
 
-
             
 class SecretariaForm(forms.Form):
 
@@ -494,3 +493,42 @@ class ExpedientePersonaForm(forms.ModelForm):
         # Si quieres filtrar instituciones puedes hacerlo aquí, por ejemplo:
         # if user:
         #     self.fields['institucion'].queryset = Institucion.objects.filter(sede=user.sede)
+
+
+class ExpedienteResumenIntervencionForm(forms.Form):
+    fecha_desde = forms.DateField(
+        label="Fecha desde:",
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control form-control-sm',
+                'type': 'date',
+            }
+        ),
+        input_formats=['%Y-%m-%d']
+    )
+    fecha_hasta = forms.DateField(
+        label="Fecha hasta:",
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control form-control-sm',
+                'type': 'date',
+            }
+        ),
+        input_formats=['%Y-%m-%d']
+    )
+    medio_ingreso = forms.ModelChoiceField(
+        label="Medio de ingreso:",
+        required=False,
+        queryset=MedioIngreso.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    grupo_etario = forms.ModelChoiceField(
+        label="Grupo etario:",
+        required=False,
+        queryset=GrupoEtario.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )   

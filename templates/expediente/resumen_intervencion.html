@@ -1,0 +1,128 @@
+{% extends "core/index.html" %}
+{% load static %}
+
+{% block page_content %}
+
+<div class="container-fluid">
+
+    <!-- Título -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            Resumen de Intervenciones
+        </h1>
+    </div>
+
+    <!-- Card Filtros -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+
+            <form method="get">
+                <div class="form-row">
+
+                    <div class="col-md-3">
+                        {{ form.fecha_desde.label_tag }}
+                        {{ form.fecha_desde }}
+                    </div>
+
+                    <div class="col-md-3">
+                        {{ form.fecha_hasta.label_tag }}
+                        {{ form.fecha_hasta }}
+                    </div>
+
+                    <div class="col-md-3">
+                        {{ form.medio_ingreso.label_tag }}
+                        {{ form.medio_ingreso }}
+                    </div>
+
+                    <div class="col-md-3">
+                        {{ form.grupo_etario.label_tag }}
+                        {{ form.grupo_etario }}
+                    </div>
+
+                </div>
+
+                <div class="mt-3 text-right">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+
+                    <a href="{% url 'expediente:resumen_intervencion' %}"
+                       class="btn btn-secondary btn-sm">
+                        Limpiar
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Card Total -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Total de Expedientes
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{ total }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- Tabla -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="h6 mb-0 text-white text-uppercase">
+                Detalle por Resumen de Intervención
+            </h6>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Intervención</th>
+                            <th class="text-center">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in detalle %}
+                        <tr>
+                            <td>{{ item.resumen_intervencion__resumen_intervencion }}</td>
+                            <td class="text-center font-weight-bold">
+                                {{ item.total }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                No hay resultados para los filtros seleccionados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    {% comment %}
+    <!-- Card Gráfico -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="h6 mb-0 text-white text-uppercase">
+                    Distribución de Intervenciones
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoIntervenciones"></canvas>
+            </div>
+        </div>
+    {% endcomment %}
+
+</div>
+{% endblock %}

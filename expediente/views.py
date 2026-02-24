@@ -26,10 +26,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 
 # Vistas genéricas para listas, detalle, creación, edición y eliminación de objetos
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 # Funciones auxiliares para redirecciones y obtención segura de objetos
 from django.shortcuts import redirect
+
+from django.utils.dateparse import parse_date
 
 # Formularios utilizados por las vistas de este módulo
 from .forms import (
@@ -38,7 +40,8 @@ from .forms import (
     OficioForm,
     SecretariaForm,
     ExpedienteInstitucionForm,
-    ExpedientePersonaForm
+    ExpedientePersonaForm,
+    ExpedienteResumenIntervencionForm
 )
 
 # Modelos relacionados que se manejarán en las vistas
@@ -1582,3 +1585,67 @@ def expediente_inst_rel_pers_rel_view(request, expediente_id):
         'personas_relacionadas': personas_relacionadas,
         'instituciones_relacionadas': instituciones_relacionadas,  # Corrección del typo
     })
+
+
+class ReporteResumenIntervencionView2(TemplateView):
+    template_name = "expediente/resumen_intervencion.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Obtener parámetros GET
+        fecha_desde = parse_date(self.request.GET.get("desde")) if self.request.GET.get("desde") else None
+        fecha_hasta = parse_date(self.request.GET.get("hasta")) if self.request.GET.get("hasta") else None
+        medio_ingreso_id = self.request.GET.get("medio") or None
+        grupo_etario_id = self.request.GET.get("grupo") or None
+
+        resultado = Expediente.objects.resumen_por_intervencion(
+            fecha_desde=fecha_desde,
+            fecha_hasta=fecha_hasta,
+            medio_ingreso_id=medio_ingreso_id,
+            grupo_etario_id=grupo_etario_id,
+        )
+
+        context["total"] = resultado["total_general"]
+        context["detalle"] = resultado["detalle"]
+
+        # devolver filtros al template
+        context["filtros"] = {
+            "desde": self.request.GET.get("desde", ""),
+            "hasta": self.request.GET.get("hasta", ""),
+            "medio": medio_ingreso_id,
+            "grupo": grupo_etario_id,
+        }
+
+        return context
+    
+
+class ReporteResumenIntervencionView(LoginRequiredMixin, TemplateView):
+    template_name = "expediente/resumen_intervencion.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        form = ExpedienteResumenIntervencionForm(self.request.GET or None)
+
+        total = 0
+        detalle = []
+
+        if form.is_valid():
+            resultado = Expediente.objects.resumen_por_intervencion(
+                fecha_desde=form.cleaned_data.get("fecha_desde"),
+                fecha_hasta=form.cleaned_data.get("fecha_hasta"),
+                medio_ingreso_id=form.cleaned_data.get("medio_ingreso").id
+                    if form.cleaned_data.get("medio_ingreso") else None,
+                grupo_etario_id=form.cleaned_data.get("grupo_etario").id
+                    if form.cleaned_data.get("grupo_etario") else None,
+            )
+
+            total = resultado["total_general"]
+            detalle = resultado["detalle"]
+
+        context["form"] = form
+        context["total"] = total
+        context["detalle"] = detalle
+
+        return context

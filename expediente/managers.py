@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils.timezone import make_aware, datetime
 
 class ExpedienteManager(models.Manager):
@@ -72,3 +72,39 @@ class ExpedienteManager(models.Manager):
                 'expedienteinstitucion_expediente__rol',
             )
         )
+    
+    def resumen_por_intervencion(
+        self,
+        fecha_desde=None,
+        fecha_hasta=None,
+        medio_ingreso_id=None,
+        grupo_etario_id=None
+    ):
+        filtros = Q(estado=True)
+
+        if fecha_desde and fecha_hasta:
+            filtros &= Q(fecha_creacion__range=(fecha_desde, fecha_hasta))
+
+        if medio_ingreso_id:
+            filtros &= Q(medio_ingreso_id=medio_ingreso_id)
+
+        if grupo_etario_id:
+            filtros &= Q(grupo_etario_id=grupo_etario_id)
+
+        queryset = (
+            self.get_queryset()
+            .filter(filtros)
+            .values(
+                'resumen_intervencion__id',
+                'resumen_intervencion__resumen_intervencion'  # ajustar si el campo se llama distinto
+            )
+            .annotate(total=Count('id'))
+            .order_by('resumen_intervencion__resumen_intervencion')
+        )
+
+        total_general = self.get_queryset().filter(filtros).count()
+
+        return {
+            "total_general": total_general,
+            "detalle": queryset
+        }
