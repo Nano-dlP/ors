@@ -4,6 +4,8 @@ from django.db import models
 
 from expediente.models import ExpedienteInstitucion
 
+from .managers import InternacionManager
+
 # Create your models here.
 class MotivoInternacion(models.Model):
     motivo_internacion = models.CharField(max_length=50, verbose_name="Motivo de Internación")
@@ -85,6 +87,9 @@ class Internacion(models.Model):
     fecha_cumplimiento = models.DateField('Fecha de cumplimiento', auto_now=False, auto_now_add=False, blank=True, null=True)
     observaciones = models.TextField('Observaciones', blank=True, null=True)
     estado = models.BooleanField('Estado', default=True)
+
+    objects = InternacionManager()
+
 
     def save(self, *args, **kwargs):
         """

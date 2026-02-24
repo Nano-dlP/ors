@@ -1,5 +1,7 @@
 from django import forms
-from .models import Internacion
+from .models import Internacion, TipoInternacion
+from expediente.models import GrupoEtario
+from core.models import Sede
 
 
 class InternacionForm(forms.ModelForm):
@@ -88,3 +90,49 @@ class InternacionForm(forms.ModelForm):
             if fecha_alta and fecha_cumplimiento < fecha_alta:
                 raise forms.ValidationError("⚠️ La fecha de cumplimiento no puede ser anterior a la alta.")
         return fecha_cumplimiento
+
+
+class InternacionMotivoInternacionForm(forms.Form):
+    
+    fecha_desde = forms.DateField(
+        label="Fecha desde:",
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control form-control-sm',
+                'type': 'date',
+            }
+        ),
+        input_formats=['%Y-%m-%d']
+    )
+    fecha_hasta = forms.DateField(
+        label="Fecha hasta:",
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control form-control-sm',
+                'type': 'date',
+            }
+        ),
+        input_formats=['%Y-%m-%d']
+    )
+    tipo_internacion = forms.ModelChoiceField(
+        label="Tipo de internación:",
+        required=False,
+        queryset=TipoInternacion.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    grupo_etario = forms.ModelChoiceField(
+        label="Grupo etario:",
+        required=False,
+        queryset=GrupoEtario.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    sede = forms.ModelChoiceField(
+        label="Sede:",
+        required=False,
+        queryset=Sede.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )   

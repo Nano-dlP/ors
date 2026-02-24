@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from .models import Internacion
-from .forms import InternacionForm
+from .forms import InternacionForm, InternacionMotivoInternacionForm
 from expediente.models import ExpedienteInstitucion
 # Create your views here.
 
@@ -62,10 +62,8 @@ class InternacionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailV
     login_url = 'core:login'
     permission_required = 'internacion.view_internacion'
     raise_exception = False  # devuelve 403 Forbidden si no tiene permiso
-
-    
-    
-
+  
+   
 class InternacionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Internacion
     form_class = InternacionForm
@@ -94,3 +92,39 @@ class InternacionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
             internacion.expediente_institucion = self.get_object().expediente_institucion
         internacion.save()
         return super().form_valid(form)
+
+
+class InternacionMotivoInternacion(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    template_name = 'internacion/internacion_motivo_internacion.html'
+    login_url = 'core:login'
+    permission_required = 'internacion.view_internacion'
+    raise_exception = False  # devuelve 403 Forbidden si no tiene permiso
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        form = InternacionMotivoInternacionForm(self.request.GET or None)
+
+        total = 0
+        detalle = []
+
+        if form.is_valid():
+            resultado = Internacion.objects.internacion_motivo_internacion(
+                fecha_desde=form.cleaned_data.get("fecha_desde"),
+                fecha_hasta=form.cleaned_data.get("fecha_hasta"),
+                tipo_internacion_id=form.cleaned_data.get("tipo_internacion").id
+                    if form.cleaned_data.get("tipo_internacion") else None,
+                grupo_etario_id=form.cleaned_data.get("grupo_etario").id
+                    if form.cleaned_data.get("grupo_etario") else None,
+                sede_id=form.cleaned_data.get("sede").id
+                    if form.cleaned_data.get("sede") else None,
+            )
+
+            total = resultado["total_general"]
+            detalle = resultado["detalle"]
+
+        context["form"] = form
+        context["total"] = total
+        context["detalle"] = detalle
+
+        return context
