@@ -128,3 +128,40 @@ class InternacionMotivoInternacion(LoginRequiredMixin, PermissionRequiredMixin, 
         context["detalle"] = detalle
 
         return context
+
+
+class InternacionMotivoAlta(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    template_name = 'internacion/internacion_motivo_alta.html'
+    login_url = 'core:login'
+    permission_required = 'internacion.view_internacion'
+    raise_exception = False  # devuelve 403 Forbidden si no tiene permiso
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        """Reutilizamos el mismo formulario de filtros que en motivo internación."""
+        form = InternacionMotivoInternacionForm(self.request.GET or None)
+
+        total = 0
+        detalle = []
+
+        if form.is_valid():
+            resultado = Internacion.objects.internacion_motivo_alta(
+                fecha_desde=form.cleaned_data.get("fecha_desde"),
+                fecha_hasta=form.cleaned_data.get("fecha_hasta"),
+                tipo_internacion_id=form.cleaned_data.get("tipo_internacion").id
+                    if form.cleaned_data.get("tipo_internacion") else None,
+                grupo_etario_id=form.cleaned_data.get("grupo_etario").id
+                    if form.cleaned_data.get("grupo_etario") else None,
+                sede_id=form.cleaned_data.get("sede").id
+                    if form.cleaned_data.get("sede") else None,
+            )
+
+            total = resultado["total_general"]
+            detalle = resultado["detalle"]
+
+        context["form"] = form
+        context["total"] = total
+        context["detalle"] = detalle
+
+        return context

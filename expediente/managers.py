@@ -80,10 +80,17 @@ class ExpedienteManager(models.Manager):
         medio_ingreso_id=None,
         grupo_etario_id=None
     ):
-        filtros = Q(estado=True)
+        #filtros = Q(estado=True)
+        filtros = Q()  # Si queremos incluir internaciones inactivas (estado=False), no filtramos por estado
 
+        # Filtrar por fecha_internacion SOLO si el usuario envía fechas
         if fecha_desde and fecha_hasta:
-            filtros &= Q(fecha_creacion__range=(fecha_desde, fecha_hasta))
+            filtros &= Q(fecha_internacion__range=(fecha_desde, fecha_hasta))
+        elif fecha_desde:
+            filtros &= Q(fecha_internacion__gte=fecha_desde)
+        elif fecha_hasta:
+            filtros &= Q(fecha_internacion__lte=fecha_hasta)
+        # else: no agregamos filtro de fecha => trae todos
 
         if medio_ingreso_id:
             filtros &= Q(medio_ingreso_id=medio_ingreso_id)

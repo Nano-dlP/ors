@@ -135,4 +135,4 @@ class InternacionMotivoInternacionForm(forms.Form):
         required=False,
         queryset=Sede.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
-    )   
+    )
