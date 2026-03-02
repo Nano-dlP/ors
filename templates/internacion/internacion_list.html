@@ -10,7 +10,8 @@
 
 <style>
   .dt-toolbar .btn { margin-right: 0.25rem; }
-  .dataTables_filter input, .dataTables_length select {
+  .dataTables_filter input,
+  .dataTables_length select {
     border-radius: 0.375rem;
     padding: 0.25rem 0.5rem;
   }
@@ -18,148 +19,169 @@
 {% endblock estilos %}
 
 {% block page_content %}
-
 <div class="container-fluid">
   {% block body %}
   <div class="col">
     <div class="card shadow">
 
-      <!-- Header tipo toolbar -->
+      <!-- HEADER -->
       <div class="card-header">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <!-- Título a la izquierda -->
-          <p class="h6 mb-0 text-white"><i class="fas fa-landmark"></i> INTERNACIONES</p>
-
-          
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="h6 mb-0 text-white">
+            <i class="fas fa-landmark"></i> INTERNACIONES
+          </p>
         </div>
       </div>
 
-      <!-- Cuerpo -->
-      <div class="card-body"> 
+      <!-- BODY -->
+      <div class="card-body">
+
         {% if not internaciones %}
-          <div class="alert alert-warning" role="alert">
+          <div class="alert alert-warning">
             No hay internaciones registradas.
           </div>
         {% else %}
+
+          {# ===== ALERTA GLOBAL ===== #}
+          {% with criticas=0 %}
+            {% for internacion in internaciones %}
+              {% if internacion.estado and internacion.dias_restantes is not None and internacion.dias_restantes <= 30 %}
+                {% with criticas=criticas|add:1 %}{% endwith %}
+              {% endif %}
+            {% endfor %}
+
+            {% if criticas > 0 %}
+              <div class="alert alert-danger mb-3">
+                ⚠️ Hay <strong>{{ criticas }}</strong> internaciones próximas a vencer o vencidas.
+              </div>
+            {% endif %}
+          {% endwith %}
+
+          {# ===== TABLA ===== #}
           <div class="table-responsive w-100">
-            <table class="table table-striped table-hover table-respnsive-sm" id="id_tabla_internacion" style="font-size: 14px; width:100%">
-              <thead class="table">
+            <table id="id_tabla_internacion"
+                   class="table table-striped table-hover table-responsive-sm"
+                   style="font-size:14px;width:100%">
+
+              <thead>
                 <tr>
                   <th>Exp. Institución</th>
                   <th>Fecha de ingreso</th>
-                  <th>Fecha externación o derivación</th>
-                  <th>Fecha de cumplimiento</th>
-                  <th>Días Internado</th>
+                  <th>Fecha externación</th>
+                  <th>Fecha cumplimiento</th>
+                  <th>Días internado</th>
+                  <th>Días restantes</th>
                   <th class="text-center">Estado</th>
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
+
               <tbody>
-                {% for internacion in internaciones %}
-                    <tr>
-                      <td>{{ internacion.expediente_institucion|default_if_none:"-" }}</td>
-                      <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
-                      <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
-                      <td>{{ internacion.fecha_cumplimiento|date:"d/m/Y"|default:"-" }}</td>
-                      <td>
-                          {% if internacion.dias_internado %}
-                          {% if internacion.dias_internado > 30 and internacion.dias_internado < 90 %}
-                            <span class="badge bg-{{ internacion.nivel_internacion|default:'secondary' }} text-dark fs-6">
-                              {{ internacion.dias_internado }} días
-                            </span>
-                          {% else %}
-                            <span class="badge bg-{{ internacion.nivel_internacion|default:'secondary' }} fs-6">
-                              {{ internacion.dias_internado }} días
-                            </span>
-                          {% endif %}
-                          {% endif %}
-                      </td>
-                      <td class="text-center">
-                        {% if internacion.estado %}
-                          <span class="badge bg-warning text-dark fs-6 px-3 py-2">Internado</span>
-                        {% else %}
-                          <span class="badge bg-success fs-6 px-3 py-2">Derivación o alta</span>
-                        {% endif %}
-                    </td>
+              {% for internacion in internaciones %}
+                <tr>
+                  <td>{{ internacion.expediente_institucion|default:"-" }}</td>
+                  <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
+                  <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
+                  <td>{{ internacion.fecha_cumplimiento|date:"d/m/Y"|default:"-" }}</td>
+
+                  <!-- DÍAS INTERNADO -->
                   <td>
-                      <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ internacion.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                          Opciones
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ internacion.id }}">
-                          <li>
-                            <a class="dropdown-item" style="color: #4a6572"href="{% url 'internacion:internacion_edit' internacion.id %}">
-                              <i class="far fa-edit me-2"></i>Editar
-                            </a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" style="color: #4a6572" href="{% url 'internacion:internacion_detail' internacion.id %}">
-                              <i class="far fa-eye me-2"></i>Detalles
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
+                    {% if internacion.dias_internado is not None %}
+                      <span class="badge {% if internacion.fecha_alta %}bg-secondary{% else %}bg-info{% endif %} fs-6 px-2 py-1">
+                        {{ internacion.dias_internado }} días
+                      </span>
+                    {% else %}-{% endif %}
+                  </td>
+
+                  <!-- DÍAS RESTANTES -->
+                  <td>
+                    {% if internacion.dias_restantes is not None %}
+                      <span class="badge bg-{{ internacion.nivel_internacion }} fs-6 px-2 py-1"
+                            data-bs-toggle="tooltip"
+                            title="{{ internacion.alerta_dias_restantes.mensaje }}">
+                        {{ internacion.dias_restantes }} días
+                      </span>
+
+                      {% if internacion.alerta_dias_restantes.tipo == 'danger' %}
+                        <div class="small text-danger mt-1">
+                          {{ internacion.alerta_dias_restantes.mensaje }}
+                        </div>
+                      {% endif %}
+                    {% else %}-{% endif %}
+                  </td>
+
+                  <!-- ESTADO -->
+                  <td class="text-center">
+                    {% if internacion.estado %}
+                      <span class="badge bg-warning text-dark fs-6 px-2 py-1">Internado</span>
+                    {% else %}
+                      <span class="badge bg-success fs-6 px-2 py-1">Derivación o alta</span>
+                    {% endif %}
+                  </td>
+
+                  <!-- ACCIONES -->
+                  <td class="text-center">
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                              data-bs-toggle="dropdown">
+                        Opciones
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'internacion:internacion_edit' internacion.id %}">
+                            <i class="far fa-edit me-2"></i> Editar
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'internacion:internacion_detail' internacion.id %}">
+                            <i class="far fa-eye me-2"></i> Detalles
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
-                {% endfor %}
+              {% endfor %}
               </tbody>
+
             </table>
           </div>
         {% endif %}
       </div>
-
     </div>
   </div>
   {% endblock body %}
 </div>
 
+<!-- TOOLTIPS -->
 <script>
-function mostrarModal(elemento) {
-    const form = document.getElementById('formConfirmacion');
-    const id = elemento.getAttribute('data-id');
-    const url = elemento.getAttribute('data-url').replace('0', id);
-    form.action = url;
-
-    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
-    modal.show();
-}
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+    new bootstrap.Tooltip(el);
+  });
+});
 </script>
 {% endblock page_content %}
 
 {% block js_page %}
-<!-- jQuery y DataTables -->
+<!-- DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
 
 <script>
-$(document).ready(function () {
-    let table = $('#id_tabla_internacion').DataTable({
-        pageLength: 5,
-        lengthMenu: [5, 10, 20, 50],
-        language: { url: "{% static 'js/es-ES.json' %}" },
-        dom: "Bflrtip",
-        buttons: [
-            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
-            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
-            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
-            { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
-            { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
-        ]
-    });
-
-    // Mover toolbar al header
-    $('#id_tabla_internacion_length').appendTo('#dt-toolbar-container');
-    table.buttons().container().appendTo('#dt-toolbar-container');
-    $('#id_tabla_internacion_filter').appendTo('#dt-toolbar-container');
+$(function () {
+  $('#id_tabla_internacion').DataTable({
+    pageLength: 5,
+    lengthMenu: [5, 10, 20, 50],
+    language: { url: "{% static 'js/es-ES.json' %}" },
+    dom: "Bflrtip",
+    buttons: ['copy', 'excel', 'pdf', 'print', 'colvis']
+  });
 });
 </script>
 {% endblock js_page %}

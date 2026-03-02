@@ -165,3 +165,25 @@ class InternacionMotivoAlta(LoginRequiredMixin, PermissionRequiredMixin, Templat
         context["detalle"] = detalle
 
         return context
+    
+
+def dashboard_motivo_alta(request):
+
+    data = Internacion.objects.internacion_motivo_alta(
+        fecha_desde=request.GET.get("fecha_desde"),
+        fecha_hasta=request.GET.get("fecha_hasta"),
+        tipo_internacion_id=request.GET.get("tipo_internacion"),
+        grupo_etario_id=request.GET.get("grupo_etario"),
+        sede_id=request.GET.get("sede"),
+    )
+
+    context = {
+        "total_general": data["total_general"],
+        "detalle": list(data["detalle"]),
+    }
+
+    return render(
+        request,
+        "internacion/dashboard_motivo_alta.html",
+        context
+    )

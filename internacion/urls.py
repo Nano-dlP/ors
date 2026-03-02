@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import dashboard_motivo_alta
+
 
 app_name = 'internacion'
 
@@ -11,4 +13,10 @@ urlpatterns = [
     path('internacion/detalle/<int:pk>/', views.InternacionDetailView.as_view(), name='internacion_detail'),
     path('internacion/motivo-internacion/', views.InternacionMotivoInternacion.as_view(), name='internacion_motivo_internacion'),
     path('internacion/motivo-alta/', views.InternacionMotivoAlta.as_view(), name='internacion_motivo_alta'),
+    path(
+        "dashboard/motivo-alta/",
+        dashboard_motivo_alta,
+        name="dashboard_motivo_alta"
+    ),
+
 ]

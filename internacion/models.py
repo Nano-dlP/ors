@@ -95,7 +95,7 @@ class Internacion(models.Model):
         """
         Si la internación tiene una fecha de alta, se marca como inactiva (estado=False).
         """
-        if self.fecha_cumplimiento:
+        if self.fecha_alta:
             self.estado = False
         else:
             self.estado = True
@@ -103,27 +103,63 @@ class Internacion(models.Model):
 
     @property
     def dias_internado(self):
-        # Si no hay fecha de internación, no se puede calcular
         if not self.fecha_internacion:
             return None
 
-        # Si sigue internado
-        if not self.fecha_cumplimiento:
-            return (timezone.now().date() - self.fecha_internacion).days
+        fin = self.fecha_alta or timezone.localdate()
+        return max((fin - self.fecha_internacion).days, 0)
 
-        # Si tiene fecha de alta
-        return (self.fecha_cumplimiento - self.fecha_internacion).days
+
+    @property
+    def dias_restantes(self):
+        if not self.fecha_cumplimiento:
+            return None
+
+        dias = (self.fecha_cumplimiento - timezone.localdate()).days
+        return max(dias, 0)
+
 
     @property
     def nivel_internacion(self):
-        dias = self.dias_internado
+        dias = self.dias_restantes
         if dias is None:
             return None
         if dias <= 30:
-            return 'success'
-        elif dias <= 90:
+            return 'danger'
+        if dias <= 90:
             return 'warning'
-        return 'danger'
-
-
+        return 'success'
     
+    @property
+    def alerta_dias_restantes(self):
+        dias = self.dias_restantes
+
+        if dias is None:
+            return None
+
+        if dias == 0:
+            return {
+                'tipo': 'danger',
+                'mensaje': '⚠️ Plazo vencido'
+            }
+
+        if dias <= 30:
+            if dias == 1:
+                mensaje = '⚠️ Queda solo 1 día'
+            else:
+                mensaje = f'⚠️ Quedan solo {dias} días'
+            return {
+                'tipo': 'danger',
+                'mensaje': mensaje
+            }
+
+        if dias <= 90:
+            return {
+                'tipo': 'warning',
+                'mensaje': f'⏳ Quedan {dias} días'
+            }
+
+        return {
+            'tipo': 'success',
+            'mensaje': f'✔️ {dias} días restantes'
+        }

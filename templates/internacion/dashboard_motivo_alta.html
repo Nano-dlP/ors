@@ -1,0 +1,84 @@
+{% extends "core/index.html" %}
+{% block page_content %}
+
+<div class="container-fluid">
+
+  <!-- KPI -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6 class="text-muted">Total de Internaciones</h6>
+          <h2>{{ total_general }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h6>Motivo de Alta (Barras)</h6>
+          <canvas id="motivoAltaBar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h6>Motivo de Alta (Distribución)</h6>
+          <canvas id="motivoAltaPie"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ detalle|json_script:"detalle-data" }}
+<script>
+const dataDetalle = JSON.parse(document.getElementById('detalle-data').textContent);
+
+// Labels y valores
+const labels = dataDetalle.map(d => d.motivo_alta__motivo_alta);
+const values = dataDetalle.map(d => d.total);
+
+// Gráfico de barras
+new Chart(document.getElementById('motivoAltaBar'), {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Cantidad de internaciones',
+      data: values,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    }
+  }
+});
+
+// Gráfico de torta
+new Chart(document.getElementById('motivoAltaPie'), {
+  type: 'doughnut',
+  data: {
+    labels: labels,
+    datasets: [{
+      data: values,
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+</script>
+
+{% endblock %}
