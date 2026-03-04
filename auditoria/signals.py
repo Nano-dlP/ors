@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 from expediente.models import Expediente
 from institucion.models import Institucion
@@ -7,7 +7,7 @@ from intervencion.models import Intervencion
 from persona.models import Persona
 from profesional.models import Profesional
 
-from auditoria.models import AuditoriaExpediente, AuditoriaInstitucion, AuditoriaInternacion, AuditoriaIntervencion, AuditoriaPersona, AuditoriaProfesional, AuditoriaUsuario
+from auditoria.models import AuditoriaExpediente, AuditoriaInstitucion, AuditoriaInternacion, AuditoriaIntervencion, AuditoriaPersona, AuditoriaProfesional, AuditoriaUsuario, AuditoriaExpedientePersona
 from threading import local
 
 from django.db.models.signals import post_save, post_delete
@@ -86,7 +86,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
     )
 
 
-@receiver(post_delete, sender=Internacion)
+@receiver(pre_delete, sender=Internacion)
 def registrar_auditoria_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaInternacion.objects.create(
@@ -172,3 +172,22 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
     )
 
 #############################USUARIO##############################################
+
+
+def crear_auditoria(expediente_persona, usuario, accion, observacion=""):
+    AuditoriaExpedientePersona.objects.create(
+        expediente_persona=expediente_persona,
+        usuario=usuario,
+        accion=accion,
+
+        expediente_id=expediente_persona.expediente.id,
+        expediente_numero=str(expediente_persona.expediente),
+
+        persona_id=expediente_persona.persona.id,
+        persona_nombre=str(expediente_persona.persona),
+
+        rol_id=expediente_persona.rol.id,
+        rol_nombre=str(expediente_persona.rol),
+
+        observacion=observacion
+    )

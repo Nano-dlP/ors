@@ -27,6 +27,7 @@
       <div class="card-body">
         <form method="post" novalidate class="small-form" enctype="multipart/form-data">
           {% csrf_token %}
+          {{ form.media }}
             {% if form.non_field_errors %}
             <div class="alert alert-danger">
               {{ form.non_field_errors }}
@@ -187,7 +188,7 @@
                 <!-- Situación habitacional histórica -->
                 <div class="col-md-6 mb-3">
                   <label><i class="fas fa-home me-2"></i> Situación habitacional histórica</label>
-                  {{ form.situacion_habitacional_hist|add_class:"form-control" }}
+                  {{ form.situacion_habitacional_hist }}
                   {% if form.situacion_habitacional_hist.errors %}
                     <div class="text-danger small">
                       {{ form.situacion_habitacional_hist.errors }}
@@ -197,7 +198,7 @@
                 <!-- Observaciones -->
                 <div class="col-md-6 mb-3">
                   <label><i class="fas fa-comment-medical me-2"></i> Observaciones</label>
-                  {{ form.observaciones|add_class:"form-control" }}
+                  {{ form.observaciones }}
                   {% if form.observaciones.errors %}
                     <div class="text-danger small">
                       {{ form.observaciones.errors }}

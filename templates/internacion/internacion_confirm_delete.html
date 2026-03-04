@@ -1,0 +1,30 @@
+{% extends 'core/index.html' %}
+
+{% block page_content %}
+<div class="container mt-4">
+  <div class="card shadow border-0 col-md-6 mx-auto">
+    <div class="card-header bg-danger text-white">
+      <h5 class="mb-0">Confirmar eliminación</h5>
+    </div>
+
+    <div class="card-body">
+      <p>
+        ¿Está seguro que desea eliminar la relación con la institución
+        <strong>{{ object.internacion }}</strong>?
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'internacion:internacion_list' %}" 
+           class="btn btn-secondary">
+          Cancelar
+        </a>
+
+        <button type="submit" class="btn btn-danger">
+          Eliminar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

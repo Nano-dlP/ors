@@ -16,7 +16,7 @@
       <div class="card shadow border-0">
         
         <!-- Header -->
-        <div class="card-header bg-warning text-white py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <div class="card-header text-white py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
           <h5 class="mb-0 text-uppercase fw-bold">
             <i class="far fa-file me-2"></i> Expedientes por Persona
           </h5>
@@ -28,24 +28,53 @@
             <div class="alert alert-warning text-center mb-0">
               No hay expedientes registrados.
             </div>
-          {% else %}
+          {% else %} 
           <div class="table-responsive">
             <table class="table table-striped table-hover align-middle" id="id_tabla_exp" style="width:100%; font-size: 15px;">
-              <thead class="table-light text-center align-middle">
+              <thead class="table-light ">
                 <tr>
                   <th>Expediente</th>
                   <th>D.N.I.</th>
                   <th>Persona</th>
                   <th>Rol</th>
+                  <th class="text-center" style="width:140px;">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {% for exp in expediente_personas %}
-                  <tr class="text-center">
-                    <td class="fw-semibold">{{ exp.expediente }}</td>
+                  <tr >
+                    <td >{{ exp.expediente }}</td>
                     <td>{{ exp.persona.numero_documento }}</td>
                     <td>{{ exp.persona }}</td>
                     <td>{{ exp.rol }}</td>
+                    <td class="text-center">
+
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                              type="button"
+                              id="dropdownMenu{{ exp.id }}"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                        Opciones
+                      </button>
+
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                          aria-labelledby="dropdownMenu{{ exp.id }}">
+
+                       
+
+                        <li>
+                          <a class="dropdown-item text-danger"
+                             href="{% url 'expediente:expediente_persona_delete' exp.id %}">
+                            <i class="fas fa-trash me-2"></i>
+                            Eliminar
+                          </a>
+                        </li>
+
+                      </ul>
+                    </div>
+
+                  </td>
                   </tr>
                 {% endfor %}
               </tbody>

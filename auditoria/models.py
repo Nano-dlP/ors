@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.conf import settings  # importa AUTH_USER_MODEL dinámicamente
-from expediente.models import Expediente
+from expediente.models import Expediente, ExpedientePersona, ExpedienteInstitucion
 from institucion.models import Institucion
 from internacion.models import Internacion
 from intervencion.models import Intervencion
@@ -18,7 +18,7 @@ class AuditoriaExpediente(models.Model):
         ('ELIMINAR', 'Eliminación'),
     ]
 
-    expediente = models.ForeignKey(Expediente, on_delete=models.SET_NULL, related_name='auditorias', null=True, blank=True)
+    expediente = models.ForeignKey(Expediente, on_delete=models.SET_NULL, related_name='auditorias_expediente', null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     accion = models.CharField(max_length=10, choices=ACCIONES)
     observacion = models.TextField(blank=True, null=True)
@@ -35,7 +35,7 @@ class AuditoriaInstitucion(models.Model):
         ('ELIMINAR', 'Eliminación'),
     ]
     
-    institucion = models.ForeignKey(Institucion, on_delete=models.SET_NULL, related_name='auditorias', null=True, blank=True)
+    institucion = models.ForeignKey(Institucion, on_delete=models.SET_NULL, related_name='auditorias_institucion', null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     accion = models.CharField(max_length=10, choices=ACCIONES)
     observacion = models.TextField(blank=True, null=True)
@@ -52,7 +52,7 @@ class AuditoriaInternacion(models.Model):
         ('ELIMINAR', 'Eliminación'),
     ]
 
-    internacion = models.ForeignKey(Internacion, on_delete=models.SET_NULL, related_name='auditorias', null=True, blank=True)
+    internacion = models.ForeignKey(Internacion, on_delete=models.SET_NULL, related_name='auditorias_internacion', null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     accion = models.CharField(max_length=10, choices=ACCIONES)
     observacion = models.TextField(blank=True, null=True)
@@ -69,7 +69,7 @@ class AuditoriaIntervencion(models.Model):
         ('ELIMINAR', 'Eliminación'),
     ]
 
-    intervencion = models.ForeignKey(Intervencion, on_delete=models.SET_NULL, related_name='auditorias', null=True, blank=True)
+    intervencion = models.ForeignKey(Intervencion, on_delete=models.SET_NULL, related_name='auditorias_intervencion', null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     accion = models.CharField(max_length=10, choices=ACCIONES)
     observacion = models.TextField(blank=True, null=True)
@@ -87,7 +87,7 @@ class AuditoriaPersona(models.Model):
         ('ELIMINAR', 'Eliminación'),
     ]
 
-    persona = models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='auditorias', null=True, blank=True)
+    persona = models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='auditorias_persona', null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     accion = models.CharField(max_length=10, choices=ACCIONES)
     observacion = models.TextField(blank=True, null=True)
@@ -108,7 +108,7 @@ class AuditoriaProfesional(models.Model):
         'profesional.Profesional',
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        related_name='auditorias'
+        related_name='auditorias_profesional'
     )
     nombre_profesional = models.CharField(max_length=255, blank=True, null=True)
     usuario = models.ForeignKey(
@@ -148,4 +148,47 @@ class AuditoriaUsuario(models.Model):
         return f"{self.usuario} - {self.get_accion_display()}"
     
 
+class AuditoriaExpedientePersona(models.Model):
 
+    ACCIONES = [
+        ('CREAR', 'Creación'),
+        ('EDITAR', 'Edición'),
+        ('ELIMINAR', 'Eliminación'),
+    ]
+
+    # FK opcional (para navegación)
+    expediente_persona = models.ForeignKey(
+        ExpedientePersona,
+        on_delete=models.SET_NULL,
+        related_name='auditorias_expediente_persona',
+        null=True,
+        blank=True
+    )
+
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    accion = models.CharField(max_length=10, choices=ACCIONES)
+
+    # 🔹 Snapshot del expediente
+    expediente_id = models.IntegerField(null=True, blank=True)
+    expediente_numero = models.CharField(max_length=100, null=True, blank=True)
+
+    # 🔹 Snapshot de persona
+    persona_id = models.IntegerField(null=True, blank=True)
+    persona_nombre = models.CharField(max_length=255, null=True, blank=True)
+
+    # 🔹 Snapshot del rol
+    rol_id = models.IntegerField(null=True, blank=True)
+    rol_nombre = models.CharField(max_length=255, null=True, blank=True)
+
+    observacion = models.TextField(blank=True, null=True)
+
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario} - {self.get_accion_display()} - Exp:{self.expediente_id}"

@@ -28,7 +28,9 @@ from .views import (
     ExpedientePersonaCreateByIdView,
     listado_view,
     expediente_inst_rel_pers_rel_view,
-    ReporteResumenIntervencionView
+    ReporteResumenIntervencionView,
+    ExpedienteInstitucionDeleteView,
+    ExpedientePersonaDeleteView
 )
 
 app_name = 'expediente'
@@ -66,9 +68,9 @@ urlpatterns = [
 
     path('expediente/resumen_intervencion/', ReporteResumenIntervencionView.as_view(), name="resumen_intervencion"),
 
+    path('expediente-institucion/<int:pk>/eliminar/', ExpedienteInstitucionDeleteView.as_view(), name='expediente_institucion_delete'),
+    path('expediente-persona/<int:pk>/eliminar/', ExpedientePersonaDeleteView.as_view(), name='expediente_persona_delete'),
 
-
-  
 
     # ------------------------------
     # Catch-all para ignorar cualquier texto extra

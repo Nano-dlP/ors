@@ -88,7 +88,8 @@ INSTALLED_APPS = [
     'auditoria',
 
     'crum',  # para obtener el usuario actual en signals
-
+    'ckeditor',  # editor de texto enriquecido
+    'ckeditor_uploader',
 ]
 
 # Cache: LocMem en desarrollo, Redis en producción (mejor rendimiento/compartido)
@@ -208,6 +209,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"
+
 LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
@@ -249,4 +252,20 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
+}
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar": [
+            ["Bold", "Italic", "Underline"],
+            ["NumberedList", "BulletedList"],
+            ["Link", "Unlink"],
+            ["RemoveFormat"],
+            ["Source"],
+        ],
+        "height": 180,
+        "width": "auto",
+        "removePlugins": "elementspath",
+        "resize_enabled": False,  # opcional: quita el “tirador” para redimensionar
+    }
 }

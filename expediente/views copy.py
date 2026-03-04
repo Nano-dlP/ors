@@ -1216,27 +1216,28 @@ class ExpedienteInstitucionCreateView(LoginRequiredMixin, PermissionRequiredMixi
     raise_exception = False
     template_name = 'expediente/expediente_institucion_form.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.expediente = None
-        expediente_id = request.GET.get('expediente')
-        if expediente_id:
-            self.expediente = get_object_or_404(Expediente, id=expediente_id)
-        return super().dispatch(request, *args, **kwargs)
-
     def get_initial(self):
         initial = super().get_initial()
-        if self.expediente:
-            initial['expediente'] = self.expediente
+        expediente_id = self.request.GET.get('expediente')
+        if expediente_id:
+            initial['expediente'] = expediente_id
         return initial
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['numero_expediente'] = (
-            self.expediente.identificador if self.expediente else None
-        )
+        expediente_id = self.request.GET.get('expediente')
+        numero_expediente = None
+        if expediente_id:
+            try:
+                expediente = Expediente.objects.get(id=expediente_id)
+                numero_expediente = expediente.identificador
+            except Expediente.DoesNotExist:
+                numero_expediente = None
+        context['numero_expediente'] = numero_expediente
         context['instituciones'] = Institucion.objects.all()
         context['roles'] = Rol.objects.all()
         return context
+
 
 
 class ExpedienteInstitucionCreateByIdView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -1409,15 +1410,7 @@ class ExpedientePersonaCreateView(LoginRequiredMixin, PermissionRequiredMixin, C
         messages.error(self.request, "⚠️ No se pudo guardar el expediente. La persona ya tiene ese rol asociado.")
         return super().form_invalid(form)
 
-class ExpedientePersonaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = ExpedientePersona
-    template_name = 'expediente/expediente_persona_confirm_delete.html'
-    success_url = reverse_lazy('expediente:expediente_persona_list')
-    login_url = 'core:login'
-    permission_required = 'expediente.delete_expedientepersona'
-    raise_exception = False
 
-    
 
 # 🔹 Esta vista muestra un listado de registros del modelo ExpedienteInstitucion
 class ExpedienteInstitucionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -1471,7 +1464,6 @@ class ExpedienteInstitucionListView(LoginRequiredMixin, PermissionRequiredMixin,
 
 class ExpedienteInstitucionDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = ExpedienteInstitucion
-    template_name = 'expediente/expediente_institucion_confirm_delete.html'
     success_url = reverse_lazy('expediente:expediente_institucion_list')
     login_url = 'core:login'
     permission_required = 'expediente.delete_expedienteinstitucion'

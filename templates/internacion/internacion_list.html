@@ -7,15 +7,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 <link rel="stylesheet" href="{% static 'css/estilos_tablas.css' %}">
-
-<style>
-  .dt-toolbar .btn { margin-right: 0.25rem; }
-  .dataTables_filter input,
-  .dataTables_length select {
-    border-radius: 0.375rem;
-    padding: 0.25rem 0.5rem;
-  }
-</style>
+ 
 {% endblock estilos %}
 
 {% block page_content %}
@@ -65,7 +57,8 @@
 
               <thead>
                 <tr>
-                  <th>Exp. Institución</th>
+                  <th>Expediente</th>
+                  <th>Institución</th>
                   <th>Fecha de ingreso</th>
                   <th>Fecha externación</th>
                   <th>Fecha cumplimiento</th>
@@ -80,6 +73,7 @@
               {% for internacion in internaciones %}
                 <tr>
                   <td>{{ internacion.expediente_institucion|default:"-" }}</td>
+                  <td>{{ internacion.expediente_institucion.institucion|default:"-" }}</td>
                   <td>{{ internacion.fecha_internacion|date:"d/m/Y"|default:"-" }}</td>
                   <td>{{ internacion.fecha_alta|date:"d/m/Y"|default:"-" }}</td>
                   <td>{{ internacion.fecha_cumplimiento|date:"d/m/Y"|default:"-" }}</td>
@@ -139,6 +133,13 @@
                             <i class="far fa-eye me-2"></i> Detalles
                           </a>
                         </li>
+                     
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'internacion:internacion_delete' internacion.id %}">
+                            <i class="far fa-trash-alt me-2"></i> Eliminar
+                          </a>
+                        </li>
                       </ul>
                     </div>
                   </td>
@@ -167,11 +168,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 {% block js_page %}
 <!-- DataTables JS -->
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- DataTables -->
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Buttons -->
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+
+<!-- Exportaciones -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
 
 <script>
 $(function () {
@@ -184,4 +200,36 @@ $(function () {
   });
 });
 </script>
+
+<script>
+$(document).ready(function () {
+
+  if ($.fn.DataTable.isDataTable('#id_tabla_internacion')) {
+      $('#id_tabla_internacion').DataTable().destroy();
+  }
+
+  var table = $('#id_tabla_internacion').DataTable({
+    pageLength: 5,
+    lengthMenu: [5, 10, 20, 50],
+    language: {
+      url: "{% static 'js/es-ES.json' %}"
+    },
+    dom: "Bflrtip",
+    buttons: [
+        { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
+        { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
+        { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
+        { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
+        { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white', columns: ':not(.noVis)'}
+    ]
+  });
+
+  $('#id_tabla_internacion_length').appendTo('#dt-toolbar-container');
+  table.buttons().container().appendTo('#dt-toolbar-container');
+  $('#id_tabla_internacion_filter').appendTo('#dt-toolbar-container');
+
+});
+</script>
+
+
 {% endblock js_page %}

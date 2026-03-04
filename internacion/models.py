@@ -126,7 +126,7 @@ class Internacion(models.Model):
             return None
         if dias <= 30:
             return 'danger'
-        if dias <= 90:
+        if dias <= 60:
             return 'warning'
         return 'success'
     
@@ -153,7 +153,7 @@ class Internacion(models.Model):
                 'mensaje': mensaje
             }
 
-        if dias <= 90:
+        if dias <= 60:
             return {
                 'tipo': 'warning',
                 'mensaje': f'⏳ Quedan {dias} días'

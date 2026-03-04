@@ -84,19 +84,19 @@
           <div class="contenido">{{ expediente.edad_persona }}</div>
         </div>
         <div class="col-md-3 mb-3">
-          <div class="etiqueta"><i class="fas fa-home me-2"></i> Situación habitacional</div>
-          <div class="contenido">{{ expediente.situacion_habitacional_hist|default:"-" }}</div>
+          <div class="etiqueta"><i class="fas fa-comment-dots me-2"></i> Resumen intervención</div>
+          <div class="contenido">{{ expediente.resumen_intervencion }}</div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
-          <div class="etiqueta"><i class="fas fa-comment-dots me-2"></i> Resumen intervención</div>
-          <div class="contenido">{{ expediente.resumen_intervencion }}</div>
+          <div class="etiqueta"><i class="fas fa-home me-2"></i> Situación habitacional</div>
+          <div class="contenido">{{ expediente.situacion_habitacional_hist|safe }}</div>
         </div>
         <div class="col-md-6 mb-3">
           <div class="etiqueta"><i class="fas fa-comment-medical me-2"></i> Observaciones</div>
-          <div class="contenido">{{ expediente.observaciones|default:"-" }}</div>
+          <div class="contenido">{{ expediente.observaciones|safe }}</div>
         </div>
       </div>
 

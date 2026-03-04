@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block estilos %}
-<!-- DataTables Bootstrap 5 CSS -->
+<!-- DataTables Bootstrap 5 -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 <link rel="stylesheet" href="{% static 'css/estilos_tablas.css' %}">
@@ -11,86 +11,118 @@
 {% block page_content %}
 <div class="container-fluid mt-4">
   <div class="row">
-    {% block body %}
     <div class="col">
-      <div class="card shadow">
-        <!-- Card Header -->
-        <div class="card-header bg-warning text-white py-3 px-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-          <p class="h6 mb-0 text-white text-uppercase"><i class="far fa-file me-2"></i>EXPEDIENTES POR INSTITUCION</p>
-          
+      <div class="card shadow border-0">
+
+        <!-- HEADER PROFESIONAL -->
+        <div class="card-header">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            
+            <h6 class="mb-0 text-uppercase fw-semibold">
+              <i class="far fa-file me-2 color-header"></i>
+              Expedientes por Institución
+            </h6>
+
+            <!-- Toolbar DataTables -->
+            <div id="dt-toolbar-container" class="d-flex flex-wrap align-items-center gap-2">
+              <!-- DataTables inyecta botones acá -->
+            </div>
+
+          </div>
         </div>
 
-        <!-- Card Body -->
+        <!-- BODY -->
         <div class="card-body">
-          {% comment %}
-              {% if messages %}
-                  {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                      {{ message }}
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                  {% endfor %}
-              {% endif %}
-          {% endcomment %}
 
           {% if not expediente_instituciones %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning mb-0">
               No hay expedientes registrados.
             </div>
           {% else %}
+
           <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle" id="id_tabla_exp" style="font-size: 14px; width:100%">
+            <table id="id_tabla_exp"
+                   class="table table-striped table-hover align-middle"
+                   style="font-size:14px; width:100%">
+
               <thead class="table-light">
                 <tr>
                   <th>Expediente</th>
                   <th>Institución</th>
                   <th>Rol</th>
-                  <th>Acciones</th>
+                  <th class="text-center" style="width:140px;">Acciones</th>
                 </tr>
               </thead>
+
               <tbody>
                 {% for exp in expediente_instituciones %}
-                  <tr>
-                    <td>{{ exp.expediente }}</td>
-                    <td>{{ exp.institucion }}</td>
-                    <td>{{ exp.rol }}</td>
-                    <td>
-                       <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenu{{ expediente.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                          Opciones
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ expediente.id }}">
-                        
-                          <li>
-                            <a class="dropdown-item" style="color: #4a6572"
-                              href="{% url 'internacion:internacion_create' exp.id %}">
-                              <i class="far fa-plus-square me-2"></i>Agregar Internación
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
+                <tr>
+                  <td>{{ exp.expediente }}</td>
+                  <td>{{ exp.institucion }}</td>
+                  <td>{{ exp.rol }}</td>
+
+                  <td class="text-center">
+
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                              type="button"
+                              id="dropdownMenu{{ exp.id }}"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                        Opciones
+                      </button>
+
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                          aria-labelledby="dropdownMenu{{ exp.id }}">
+
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'internacion:internacion_create' exp.id %}">
+                            <i class="far fa-plus-square me-2 text-success"></i>
+                            Agregar Internación
+                          </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                          <a class="dropdown-item text-danger"
+                             href="{% url 'expediente:expediente_institucion_delete' exp.id %}">
+                            <i class="fas fa-trash me-2"></i>
+                            Eliminar
+                          </a>
+                        </li>
+
+                      </ul>
+                    </div>
+
+                  </td>
+                </tr>
                 {% endfor %}
               </tbody>
+
             </table>
           </div>
+
           {% endif %}
+
         </div>
       </div>
     </div>
-    {% endblock body %}
   </div>
 </div>
 {% endblock page_content %}
 
 {% block js_page %}
+
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <!-- DataTables -->
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-<!-- DataTables Buttons -->
+
+<!-- Buttons -->
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -102,25 +134,33 @@
 
 <script>
 $(document).ready(function () {
+
     let table = $('#id_tabla_exp').DataTable({
         pageLength: 5,
         lengthMenu: [5, 10, 20, 50],
         language: { url: "{% static 'js/es-ES.json' %}" },
-        dom: "Bflrtip",
         responsive: true,
+        dom: "<'row align-items-center mb-2'<'col-md-6'B><'col-md-6 text-md-end'f>>" +
+             "rt" +
+             "<'row mt-3'<'col-md-6'l><'col-md-6'p>>",
+        columnDefs: [
+            { orderable: false, targets: 3 },
+            { className: "text-center", targets: 3 }
+        ],
         buttons: [
-            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
-            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
-            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
-            { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
-            { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
+            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i>', className: 'btn btn-light border btn-sm' },
+            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i>', className: 'btn btn-success btn-sm text-white' },
+            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i>', className: 'btn btn-danger btn-sm text-white' },
+            { extend: 'print', text: '<i class="fas fa-print"></i>', className: 'btn btn-info btn-sm text-white' },
+            { extend: 'colvis', text: '<i class="fas fa-eye"></i>', className: 'btn btn-dark btn-sm text-white' }
         ]
     });
 
-    // Toolbar personalizada
-    $('#id_tabla_exp_length').addClass('me-2').appendTo('#dt-toolbar-container');
-    table.buttons().container().addClass('me-2').appendTo('#dt-toolbar-container');
-    $('#id_tabla_exp_filter').addClass('ms-auto').appendTo('#dt-toolbar-container');
+    // Mover elementos al contenedor del header
+    table.buttons().container().appendTo('#dt-toolbar-container');
+    $('#id_tabla_exp_filter').appendTo('#dt-toolbar-container');
+
 });
 </script>
+
 {% endblock js_page %}

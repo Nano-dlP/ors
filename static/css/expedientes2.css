@@ -1,0 +1,196 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f7fa;
+}
+
+/* Paleta moderna */
+:root {
+  --color-primario: #2563eb; /* Azul */
+  --color-primario-oscuro: #1e40af;
+  --color-secundario: #64748b; /* Gris azulado */
+  --color-acento: #22c55e; /* Verde suave */
+}
+
+/* Card y efecto hover */
+.card,
+.custom-card {
+  border-radius: 1rem;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.custom-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Header */
+.card-header {
+  background-color: #4a6572 !important;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Títulos pequeños */
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2b3e50;
+}
+
+/* Label de formulario */
+.form-label,
+.form-check-label {
+  font-weight: 400; /* quitar semibold/bold */
+  color: #444;
+}
+
+/* Inputs y selects con altura uniforme */
+input.form-control,
+select.form-select {
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9rem;
+  height: 52px;
+  min-height: 52px;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+/* Textarea respeta rows */
+textarea.form-control {
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+  height: auto;
+  min-height: unset;
+  resize: vertical;
+}
+
+.form-control:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+/* Select especial para medio de ingreso */
+.select-medio {
+  font-size: 1rem;
+  padding: 0.9rem 1rem;
+  height: 52px !important;
+}
+
+/* Botones principal y secundario */
+.btn-primary, .btn-gradient {
+  background-color: #2b6777;
+  border-color: #2b6777;
+  color: #fff;
+  border-radius: 0.6rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-primary:hover,
+.btn-gradient:hover {
+  background-color: #1f4e5f;
+  border-color: #1f4e5f;
+  background: linear-gradient(45deg, var(--color-primario-oscuro), #1e3a8a); /* para gradiente */
+  transform: scale(1.02);
+}
+
+.btn-secondary,
+.btn-outline-secondary {
+  background-color: #b0bec5;
+  border-color: #b0bec5;
+  color: #333;
+  border-radius: 0.6rem;
+}
+.btn-secondary:hover,
+.btn-outline-secondary:hover {
+  background-color: #90a4ae;
+  border-color: #90a4ae;
+  color: white;
+}
+
+/* Errores */
+.text-danger.small {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+/* Modal header */
+.modal-header {
+  background-color: #4caf50;
+}
+
+/* Foto de perfil consistente */
+.perfil-foto {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.perfil-foto:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.perfil-foto:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Paginación DataTables */
+.dataTables_paginate .paginate_button {
+  background-color: #2e3c4b;
+  color: #fff !important;
+  border-radius: 5px;
+  margin: 0 2px;
+}
+.dataTables_length select {
+  font-size: 0.75rem;
+  padding: 0.35rem 1rem 1rem 1rem;
+  min-width: 65px;
+  height: auto;
+}
+
+/* Input especial de perfil si se usa */
+.form-control.rounded-3.perfil {
+  padding: 0.5rem 1rem;
+  line-height: 1.5;
+  height: auto;
+}
+
+/* Altura uniforme (si quieres por clase extra) */
+.input-altura {
+  height: 52px !important;
+  min-height: 52px !important;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+form input[type="text"],
+form select {
+  text-transform: uppercase;
+}
+
+form input[type="number"],
+
+form input[type="email"],
+
+form textarea {
+  text-transform: none;
+}
+
+form input[type="date"] {
+  text-transform: none;
+}
+
+.textarea-3-rows {
+    height: 90px !important; /* equivalente a unas 3 líneas */
+    resize: vertical; /* permite redimensionar manualmente si querés */
+}
+
+textarea.form-control {
+  height: auto !important;
+  min-height: 120px;
+}

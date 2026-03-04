@@ -60,6 +60,7 @@ class Genero(models.Model):
     class Meta:
         verbose_name='Genero'
         verbose_name_plural='Generos'
+        ordering = ['genero']
 
 
 
@@ -72,6 +73,7 @@ class Nivel_Educativo(models.Model):
     class Meta:
         verbose_name='Nivel Educativo'
         verbose_name_plural='Niveles Educativos'
+        ordering = ['nivel_educativo']
 
 
 
@@ -84,6 +86,7 @@ class Tipo_Documento(models.Model):
     class Meta:
         verbose_name ='Tipo de documento'
         verbose_name_plural = 'Tipos de documentos'
+        ordering = ['tipo_documento']
 
 
 
@@ -99,6 +102,7 @@ class Localidad(models.Model):
     class Meta:
         verbose_name = 'Localidad'
         verbose_name_plural = 'Localidades'
+        ordering = ['localidad']
 
 
 
@@ -130,6 +134,7 @@ class AreaProfesional(models.Model):
     class Meta:
         verbose_name = 'Área profesional'
         verbose_name_plural = 'Áreas profesionales'
+        ordering = ['area_profesional']
 
 
 
@@ -142,7 +147,7 @@ class Profesion (models.Model):
     class Meta:
         verbose_name = 'Profesión'
         verbose_name_plural = 'Profesiones'
-        
+        ordering = ['profesion']
 
 
 class Rol (models.Model):
@@ -154,7 +159,7 @@ class Rol (models.Model):
     class Meta:
         verbose_name = 'Rol'
         verbose_name_plural = 'Roles'
-
+        ordering = ['rol']
 
 class SituacionHabitacional(models.Model):
     situacion_habitacional = models.CharField(max_length=50, verbose_name="Situación Habitacional")

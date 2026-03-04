@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, TemplateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -92,6 +92,16 @@ class InternacionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
             internacion.expediente_institucion = self.get_object().expediente_institucion
         internacion.save()
         return super().form_valid(form)
+
+
+class InternacionDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Internacion
+    template_name = 'internacion/internacion_confirm_delete.html'
+    success_url = reverse_lazy('internacion:internacion_list')
+    context_object_name = 'internacion'
+    login_url = 'core:login'
+    permission_required = 'internacion.delete_internacion'
+    raise_exception = False  # devuelve 403 Forbidden si no tiene permiso
 
 
 class InternacionMotivoInternacion(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):

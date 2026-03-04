@@ -18,6 +18,7 @@ from .models import (Expediente,
 
 from core.models import Sede
 from django.conf import settings
+from ckeditor.widgets import CKEditorWidget
 
 
 
@@ -82,7 +83,7 @@ class DemandaEspontanea(forms.Form):
     )
     situacion_habitacional_hist = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
     resumen_intervencion = forms.ModelChoiceField(
         queryset=ResumenIntervencion.objects.all(),
@@ -90,7 +91,7 @@ class DemandaEspontanea(forms.Form):
     )
     observaciones = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
     
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
@@ -225,7 +226,7 @@ class OficioForm(forms.Form):
     situacion_habitacional_hist = forms.CharField(
         label="Situación habitacional histórica:",
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
     rol = forms.ModelChoiceField(
         queryset=Rol.objects.all(),
@@ -245,13 +246,14 @@ class OficioForm(forms.Form):
     observaciones = forms.CharField(
         label="Observaciones:",
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
 
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Usuario autenticado
         expediente = kwargs.pop('expediente', None)  # 👈 instancia del expediente pasada desde la vista
+        
         super().__init__(*args, **kwargs)
 
         # Si estamos editando un expediente existente
@@ -359,7 +361,7 @@ class SecretariaForm(forms.Form):
     situacion_habitacional_hist = forms.CharField(
         label="Situación habitacional histórica:",
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
     resumen_intervencion = forms.ModelChoiceField(
         label="Resumén de intervención:",
@@ -375,7 +377,7 @@ class SecretariaForm(forms.Form):
     observaciones = forms.CharField(
         label="Observaciones:",
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+        widget=CKEditorWidget()
     )
     #Con esta función obtenemos la sede asignada al usuario para cargar el formulario
     #def __init__(self, *args, **kwargs):
