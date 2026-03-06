@@ -1,13 +1,23 @@
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
-from expediente.models import Expediente
+from expediente.models import Expediente, ExpedientePersona, ExpedienteInstitucion
 from institucion.models import Institucion
 from internacion.models import Internacion
 from intervencion.models import Intervencion
 from persona.models import Persona
 from profesional.models import Profesional
 
-from auditoria.models import AuditoriaExpediente, AuditoriaInstitucion, AuditoriaInternacion, AuditoriaIntervencion, AuditoriaPersona, AuditoriaProfesional, AuditoriaUsuario, AuditoriaExpedientePersona
+from auditoria.models import (
+                                AuditoriaExpediente, 
+                                AuditoriaInstitucion, 
+                                AuditoriaInternacion, 
+                                AuditoriaIntervencion, 
+                                AuditoriaPersona, 
+                                AuditoriaProfesional, 
+                                AuditoriaUsuario, 
+                                AuditoriaExpedientePersona, 
+                                AuditoriaExpedienteInstitucion
+                            )
 from threading import local
 
 from django.db.models.signals import post_save, post_delete
@@ -24,6 +34,22 @@ def set_current_user(user):
 
 def get_current_user():
     return getattr(_user, "value", None)
+
+
+#########################USUARIO####################################
+@receiver(pre_save, sender=AuditoriaUsuario)
+def registrar_auditoria_usuario(sender, instance, created, **kwargs):
+    usuario = get_current_user()
+    accion = 'LOGIN' if created else 'LOGOUT'
+    AuditoriaUsuario.objects.create(
+        usuario_auditado=instance.usuario_auditado,
+        usuario=usuario,
+        accion=accion,
+        observacion=f"Usuario {'inició sesión' if created else 'cerró sesión'}."
+
+    )
+
+
 
 #########################EXPEDIENTE####################################
 @receiver(post_save, sender=Expediente)
@@ -174,20 +200,51 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 #############################USUARIO##############################################
 
 
-def crear_auditoria(expediente_persona, usuario, accion, observacion=""):
+
+@receiver(pre_delete, sender=ExpedientePersona)
+def crear_auditoria(sender, instance, **kwargs):
+    usuario = get_current_user()
+
     AuditoriaExpedientePersona.objects.create(
-        expediente_persona=expediente_persona,
+        expediente_persona= instance,  # ya fue eliminado
+        expediente_persona_id_original = instance.id,  # Guardamos el ID original para referencia
         usuario=usuario,
-        accion=accion,
+        accion='ELIMINAR',
 
-        expediente_id=expediente_persona.expediente.id,
-        expediente_numero=str(expediente_persona.expediente),
+        expediente_id=instance.expediente.id,
+        expediente_numero=str(instance.expediente),
 
-        persona_id=expediente_persona.persona.id,
-        persona_nombre=str(expediente_persona.persona),
+        persona_id=instance.persona.id,
+        persona_nombre=str(instance.persona),
 
-        rol_id=expediente_persona.rol.id,
-        rol_nombre=str(expediente_persona.rol),
+        rol_id=instance.rol.id,
+        rol_nombre=str(instance.rol),
 
-        observacion=observacion
+        observacion="Relación entre expediente y persona eliminada del sistema."
+    )
+
+
+
+@receiver(pre_delete, sender=ExpedienteInstitucion)
+def auditoria_eliminar(sender, instance, **kwargs):
+
+    usuario = get_current_user()
+
+    internacion = instance.internacion_expedienteinstitucion.first()
+
+    AuditoriaExpedienteInstitucion.objects.create(
+        expediente_institucion_id_original=instance.id,
+        usuario=usuario,
+        accion='ELIMINAR',
+
+        expediente_id=instance.expediente.id,
+        expediente_numero=str(instance.expediente),
+
+        institucion_id=instance.institucion.id,
+        institucion_nombre=str(instance.institucion),
+
+        internacion_id=internacion.id if internacion else None,
+        internacion_descripcion=str(internacion) if internacion else None,
+
+        observacion="Relación expediente - institución eliminada."
     )

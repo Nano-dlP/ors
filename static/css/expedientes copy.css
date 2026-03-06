@@ -1,0 +1,184 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+  }
+
+  .card {
+    border-radius: 1rem;
+    border: none;
+  }
+
+  .card-header {
+    background-color: #4a6572 !important;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #444;
+  }
+
+  .btn-primary {
+    background-color: #2b6777;
+    border-color: #2b6777;
+  }
+
+  .btn-primary:hover {
+    background-color: #1f4e5f;
+    border-color: #1f4e5f;
+  }
+
+  .btn-secondary {
+    background-color: #b0bec5;
+    border-color: #b0bec5;
+    color: #333;
+  }
+
+  .btn-secondary:hover {
+    background-color: #90a4ae;
+    border-color: #90a4ae;
+    color: white;
+  }
+
+  .form-check-label {
+    color: #333;
+  }
+
+  .modal-header {
+    background-color: #4caf50;
+  }
+
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2b3e50;
+  }
+
+  /* Paleta moderna */
+:root {
+  --color-primario: #2563eb; /* Azul */
+  --color-primario-oscuro: #1e40af;
+  --color-secundario: #64748b; /* Gris azulado */
+  --color-acento: #22c55e; /* Verde suave */
+}
+
+/* Card con efecto hover */
+.custom-card {
+  border-radius: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.custom-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Inputs */
+.form-control {
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-control:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.form-select {
+  font-size: 0.9rem;        /* tamaño normal */
+  padding: 0.5rem 0.5rem;   /* restaura el alto normal */
+  height: auto;           /* que se ajuste al texto */
+}
+
+
+.form-control.rounded-3.perfil {
+  padding: 0.5rem 1rem;   /* ajusta el alto */
+  line-height: 1.5;       /* centra el texto verticalmente */
+  height: auto;           /* deja que el alto se adapte */
+}
+
+
+/* Botón principal con gradiente */
+.btn-gradient {
+  background: linear-gradient(45deg, var(--color-primario), var(--color-primario-oscuro));
+  border: none;
+  border-radius: 0.6rem;
+  color: #fff;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-gradient:hover {
+  background: linear-gradient(45deg, var(--color-primario-oscuro), #1e3a8a);
+  transform: scale(1.02);
+}
+
+/* Botón secundario */
+.btn-outline-secondary {
+  border-radius: 0.6rem;
+}
+
+/* Errores */
+.text-danger.small {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+/* Foto de perfil consistente */
+.perfil-foto {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.perfil-foto:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.perfil-foto:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Personalizar el texto de paginación */
+.dataTables_paginate .paginate_button {
+    background-color: #2e3c4b;
+    color: #fff !important;
+    border-radius: 5px;
+    margin: 0 2px;
+}
+
+.dataTables_length select {
+  font-size: 0.75rem;
+  padding: 0.35rem 1rem 1rem 1rem;
+  min-width: 65px;
+  height: auto; /* para que se ajuste al contenido */
+}
+
+.select-medio {
+  font-size: 1rem;        /* tamaño normal */
+  padding: 0.9rem 1rem;   /* restaura el alto normal */
+  height: auto;           /* que se ajuste al texto */
+}
+
+  
+.form-select {
+  font-size: 0.9rem;        /* tamaño normal */
+  padding: 0.5rem 0.5rem;   /* restaura el alto normal */
+  height: auto;           /* que se ajuste al texto */
+}
+
+
+.form-control.rounded-3.perfil {
+  padding: 0.5rem 1rem;   /* ajusta el alto */
+  line-height: 1.5;       /* centra el texto verticalmente */
+  height: auto;           /* deja que el alto se adapte */
+}
+
+.input-altura {
+  height: 52px !important;
+  min-height: 52px !important;
+  line-height: 1.5;
+  vertical-align: middle;
+}

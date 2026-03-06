@@ -1,0 +1,366 @@
+/* =====================================================
+   VARIABLES GLOBALES
+===================================================== */
+
+:root{
+
+  --color-primario:#2b6777;
+  --color-primario-hover:#1f4e5f;
+
+  --color-secundario:#64748b;
+  --color-acento:#22c55e;
+
+  --color-sidebar:#2c3e50;
+  --color-sidebar-hover:#34495e;
+
+  --color-header:#4a6572;
+
+  --color-bg:#f5f7fa;
+  --color-border:#d1d5db;
+
+}
+
+/* =====================================================
+   BASE
+===================================================== */
+
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:var(--color-bg);
+}
+
+/* layout principal */
+
+#wrapper{
+  display:flex;
+}
+
+#content-wrapper{
+  flex:1;
+  margin-left:260px;
+  padding:25px;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+
+  width:260px;
+  height:100vh;
+
+  background:var(--color-sidebar);
+  padding-top:1rem;
+}
+
+/* links */
+
+.nav-link{
+  font-size:.85rem;
+  padding:.45rem .75rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  color:#ecf0f1;
+}
+
+.nav-link i{
+  font-size:.9rem;
+  width:18px;
+}
+
+.nav-link:hover{
+  background:var(--color-sidebar-hover);
+  color:white;
+}
+
+/* submenus */
+
+.small-nav-link{
+  font-size:.8rem;
+  padding:4px 10px;
+}
+
+.small-nav-link i{
+  font-size:.8rem;
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.card{
+
+  border:none;
+  border-radius:.8rem;
+
+  display:flex;
+  flex-direction:column;
+
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+  transition:all .2s ease;
+
+}
+
+.card:hover{
+
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.card-header{
+
+  background:var(--color-header);
+  color:white;
+
+  font-weight:600;
+  font-size:1rem;
+
+}
+
+.card-body{
+  flex:1;
+  overflow:auto;
+}
+
+/* =====================================================
+   TITULOS
+===================================================== */
+
+h5{
+  font-weight:600;
+}
+
+h6{
+  font-size:1rem;
+  font-weight:600;
+  color:#2b3e50;
+}
+
+/* =====================================================
+   FORMULARIOS
+===================================================== */
+
+.form-label,
+.form-check-label{
+  font-weight:500;
+  color:#444;
+}
+
+.form-control,
+.form-select{
+
+  border-radius:.5rem;
+  border:1px solid var(--color-border);
+
+  font-size:.9rem;
+  padding:.55rem .65rem;
+
+  transition:all .2s ease;
+
+}
+
+input.form-control,
+select.form-select{
+  height:40px;
+}
+
+textarea{
+  resize:vertical;
+}
+
+/* focus */
+
+.form-control:focus,
+.form-select:focus{
+
+  border-color:var(--color-primario);
+
+  box-shadow:0 0 0 .2rem rgba(43,103,119,.25);
+
+}
+
+/* =====================================================
+   FORMULARIOS COMPACTOS
+===================================================== */
+
+.small-form label{
+  font-size:.85rem;
+}
+
+.small-form .form-control,
+.small-form .form-select{
+
+  font-size:.85rem;
+  padding:.35rem .5rem;
+
+}
+
+.small-form .btn{
+
+  font-size:.85rem;
+  padding:.35rem .75rem;
+
+}
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.btn{
+  border-radius:.5rem;
+}
+
+.btn-primary{
+
+  background:var(--color-primario);
+  border-color:var(--color-primario);
+
+}
+
+.btn-primary:hover{
+
+  background:linear-gradient(
+    45deg,
+    var(--color-primario-hover),
+    #1e3a8a
+  );
+
+  border-color:var(--color-primario-hover);
+
+}
+
+.btn-secondary{
+
+  background:#b0bec5;
+  border-color:#b0bec5;
+  color:#333;
+
+}
+
+.btn-secondary:hover{
+
+  background:#90a4ae;
+  border-color:#90a4ae;
+  color:white;
+
+}
+
+.btn-sm{
+  font-size:.8rem;
+  padding:.3rem .65rem;
+}
+
+/* =====================================================
+   TABLAS
+===================================================== */
+
+.table th,
+.table td{
+
+  font-size:.9rem;
+  vertical-align:middle;
+  white-space:nowrap;
+
+}
+
+.table-responsive{
+  overflow-x:auto;
+}
+
+/* scrollbar */
+
+.table-responsive::-webkit-scrollbar{
+  height:6px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,.2);
+  border-radius:3px;
+}
+
+/* =====================================================
+   DATATABLES
+===================================================== */
+
+.dataTables_wrapper{
+  font-size:.9rem;
+}
+
+.dataTables_length select{
+  font-size:.8rem;
+  padding:.3rem .8rem;
+}
+
+.dataTables_paginate .paginate_button{
+
+  background:#2e3c4b;
+  color:#fff !important;
+
+  border-radius:5px;
+  margin:0 2px;
+
+}
+
+/* =====================================================
+   PERFIL
+===================================================== */
+
+.perfil-foto{
+
+  width:150px;
+  height:150px;
+
+  object-fit:cover;
+  border-radius:8px;
+
+  transition:all .2s ease;
+
+}
+
+.perfil-foto:hover{
+
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(0,0,0,.15);
+
+}
+
+/* =====================================================
+   UTILIDADES
+===================================================== */
+
+.input-uppercase{
+  text-transform:uppercase;
+}
+
+.text-muted{
+  color:#7f8c8d!important;
+}
+
+.bg-success{background:#2ecc71!important;}
+.bg-warning{background:#f1c40f!important;}
+.bg-danger{background:#e74c3c!important;}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width:800px){
+
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  #content-wrapper{
+    margin-left:0;
+  }
+
+}
