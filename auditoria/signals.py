@@ -1,11 +1,15 @@
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
+from .utils import get_client_ip
 from expediente.models import Expediente, ExpedientePersona, ExpedienteInstitucion
 from institucion.models import Institucion
 from internacion.models import Internacion
 from intervencion.models import Intervencion
 from persona.models import Persona
 from profesional.models import Profesional
+
+
 
 from auditoria.models import (
                                 AuditoriaExpediente, 
@@ -28,6 +32,8 @@ from .models import Profesional, AuditoriaProfesional
 
 _user = local()
 
+
+
 # Middleware-friendly setter (para capturar el usuario actual)
 def set_current_user(user):
     _user.value = user
@@ -37,18 +43,36 @@ def get_current_user():
 
 
 #########################USUARIO####################################
-@receiver(pre_save, sender=AuditoriaUsuario)
-def registrar_auditoria_usuario(sender, instance, created, **kwargs):
-    usuario = get_current_user()
-    accion = 'LOGIN' if created else 'LOGOUT'
-    AuditoriaUsuario.objects.create(
-        usuario_auditado=instance.usuario_auditado,
-        usuario=usuario,
-        accion=accion,
-        observacion=f"Usuario {'inició sesión' if created else 'cerró sesión'}."
 
+@receiver(user_logged_in)
+def registrar_login(sender, request, user, **kwargs):
+    AuditoriaUsuario.objects.create(
+        usuario=user,
+        accion='LOGIN',
+        observacion='Usuario inició sesión',
+        ip=get_client_ip(request),
     )
 
+@receiver(user_logged_out)
+def registrar_logout(sender, request, user, **kwargs):
+    AuditoriaUsuario.objects.create(
+        usuario=user,
+        accion='LOGOUT',
+        observacion='Usuario cerró sesión',
+        ip=get_client_ip(request),
+    )
+
+@receiver(user_login_failed)
+def registrar_login_fallido(sender, credentials, request, **kwargs):
+    username = credentials.get('username', 'desconocido')
+    ip = get_client_ip(request) if request else None
+
+    AuditoriaUsuario.objects.create(
+        usuario=None,
+        accion='LOGIN_FAILED',
+        observacion=f"Intento de login fallido para el usuario: {username}",
+        ip=ip,
+    )
 
 
 #########################EXPEDIENTE####################################

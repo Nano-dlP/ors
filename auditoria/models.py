@@ -132,16 +132,32 @@ class AuditoriaProfesional(models.Model):
 
 
 
+from django.db import models
+from django.conf import settings
+
+
 class AuditoriaUsuario(models.Model):
+
     ACCIONES = [
         ('LOGIN', 'Inicio de Sesión'),
         ('LOGOUT', 'Cierre de Sesión'),
         ('CAMBIO_PASSWORD', 'Cambio de Contraseña'),
     ]
 
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='auditorias_usuario', null=True, blank=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name='auditorias_usuario',
+        null=True,
+        blank=True
+    )
+
     accion = models.CharField(max_length=20, choices=ACCIONES)
+
     observacion = models.TextField(blank=True, null=True)
+
+    ip = models.GenericIPAddressField(null=True, blank=True)
+
     fecha_hora = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

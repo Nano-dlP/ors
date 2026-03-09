@@ -8,3 +8,4 @@ class AuditoriaConfig(AppConfig):
     def ready(self):
         # Importar signals para que se registren
         import auditoria.signals
+

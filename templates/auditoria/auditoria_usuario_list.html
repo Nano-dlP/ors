@@ -1,0 +1,125 @@
+{% extends "core/index.html" %}
+{% load static %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'vendor/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/expedientes.css' %}">
+{% endblock estilos %}
+
+{% block page_content %}
+<div class="container-fluid mt-4">
+  <div class="row">
+
+{% block body %}
+<div class="card shadow mb-4">
+  <!-- Encabezado -->
+  <div class="card-header text-white py-2 px-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+    <p class="h6 mb-0 text-white text-uppercase"><i class="fas fa-history me-2"></i>Auditoría de Usuarios</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'persona:persona_list' %}" class="btn btn-sm btn-secondary">
+          <i class="fa fa-plus"></i> Volver a Personas
+        </a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="card-body">
+    {% if auditorias %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle" id="id_tabla_exp" style="font-size: 14px; width:100%">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Acción</th>
+              <th scope="col">IP</th>
+              <th scope="col">Fecha y hora</th>
+              <th scope="col">Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in auditorias %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                  {% if a.usuario %}
+                    <i class="fas fa-user text-primary"></i>
+                    {{ a.usuario.get_full_name|default:a.usuario.username }}
+                  {% else %}
+                    <span class="text-muted fst-italic">No disponible</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if a.accion == 'LOGIN' %}
+                    <span class="badge bg-success">Login</span>
+                  {% elif a.accion == 'LOGOUT' %}
+                    <span class="badge bg-warning text-dark">Logout</span>
+                  {% elif a.accion == 'LOGIN_FAILED' %}
+                    <span class="badge bg-danger">Login Fallido</span>
+                  {% endif %}
+                </td>
+                <td>{{ a.ip}}</td>
+                <td>{{ a.fecha_hora|date:"d/m/Y H:i" }}</td>
+                <td>{{ a.observacion|default:"—" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-info text-center mb-0">
+        <i class="fas fa-info-circle"></i> No hay registros de auditoría.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock body %}
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block scripts %}
+<script src="{% static 'vendor/fontawesome-free/js/all.min.js' %}" defer></script>
+{% endblock scripts %}
+
+{% block js_page %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    let table = $('#id_tabla_exp').DataTable({
+        pageLength: 5,
+        lengthMenu: [5, 10, 20, 50],
+        language: { url: "{% static 'js/es-ES.json' %}" },
+        dom: "Bflrtip",
+        responsive: true,
+        buttons: [
+            { extend: 'copyHtml5', text: '<i class="fas fa-copy"></i> Copiar', className: 'btn btn-light border' },
+            { extend: 'excelHtml5', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success text-white' },
+            { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger text-white' },
+            { extend: 'print', text: '<i class="fas fa-print"></i> Imprimir', className: 'btn btn-info text-white' },
+            { extend: 'colvis', text: '<i class="fas fa-eye"></i> Columnas', className: 'btn btn-dark text-white' }
+        ]
+    });
+
+    // Toolbar personalizada
+    $('#id_tabla_exp_length').addClass('me-2').appendTo('#dt-toolbar-container');
+    table.buttons().container().addClass('me-2').appendTo('#dt-toolbar-container');
+    $('#id_tabla_exp_filter').addClass('ms-auto').appendTo('#dt-toolbar-container');
+});
+</script>
+{% endblock js_page %}
