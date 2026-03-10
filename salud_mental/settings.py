@@ -144,7 +144,7 @@ IP_BLOCK_TIME = int(get_env('IP_BLOCK_TIME', default=60 * 15))
 raw_whitelist = get_env('IP_WHITELIST', default='127.0.0.1')
 IP_WHITELIST = [ip.strip() for ip in raw_whitelist.split(',') if ip.strip()]
 
-
+CLIENTELOG_ENABLED = False  # True para habilitar el registro de clientes (IP, user agent, etc.) en cada request (excluyendo admin/static/media)
 
 ROOT_URLCONF = 'salud_mental.urls'
 

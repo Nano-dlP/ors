@@ -1,0 +1,9 @@
+# 1) Copiar el dump a /tmp (para que postgres lo pueda leer)
+sudo cp "/home/nano/Escritorio/backup/Produccion/db_salud_mental_2026-03-10_11-52.sql" "/tmp/db_salud_mental_2026-03-10_11-52.sql"
+
+# 2) Darle permisos/propietario al usuario postgres
+sudo chown postgres:postgres "/tmp/db_salud_mental_2026-03-10_11-52.sql"
+sudo chmod 600 "/tmp/db_salud_mental_2026-03-10_11-52.sql"
+
+# 3) Restaurar en la base ya creada
+sudo -u postgres psql -d db_salud_mental -f "/tmp/db_salud_mental_2026-03-10_11-52.sql"
