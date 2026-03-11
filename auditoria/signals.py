@@ -226,27 +226,25 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=ExpedientePersona)
-def crear_auditoria(sender, instance, **kwargs):
+def auditoria_eliminar(sender, instance, **kwargs):
     usuario = get_current_user()
 
     AuditoriaExpedientePersona.objects.create(
-        expediente_persona= instance,  # ya fue eliminado
-        expediente_persona_id_original = instance.id,  # Guardamos el ID original para referencia
+        expediente_persona_id_original=instance.id,
         usuario=usuario,
         accion='ELIMINAR',
 
-        expediente_id=instance.expediente.id,
-        expediente_numero=str(instance.expediente),
+        expediente_id=instance.expediente.id if instance.expediente else None,
+        expediente_numero=str(instance.expediente) if instance.expediente else None,
 
-        persona_id=instance.persona.id,
-        persona_nombre=str(instance.persona),
+        persona_id=instance.persona.id if instance.persona else None,
+        persona_nombre=str(instance.persona) if instance.persona else None,
 
-        rol_id=instance.rol.id,
-        rol_nombre=str(instance.rol),
+        rol_id=instance.rol.id if instance.rol else None,
+        rol_nombre=str(instance.rol) if instance.rol else None,
 
         observacion="Relación entre expediente y persona eliminada del sistema."
     )
-
 
 
 @receiver(pre_delete, sender=ExpedienteInstitucion)

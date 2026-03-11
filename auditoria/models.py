@@ -132,10 +132,6 @@ class AuditoriaProfesional(models.Model):
 
 
 
-from django.db import models
-from django.conf import settings
-
-
 class AuditoriaUsuario(models.Model):
 
     ACCIONES = [

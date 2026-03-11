@@ -167,6 +167,7 @@
         </div>
       </li>
       <!-- Nav Item - Utilities Collapse Menu -->
+       
       <li class="nav-item small-nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
@@ -178,6 +179,8 @@
             <a class="collapse-item" href="{% url 'admin:index' %}">Administrar</a>
             <h6 class="collapse-header" style="color: #4a6572">Auditorías:</h6>
             <a class="collapse-item" href="{% url 'auditoria:auditoria_expediente_list' %}">Expedientes</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_expediente_persona_list' %}">Expedientes y Personas</a>
+            <a class="collapse-item" href="{% url 'auditoria:auditoria_expediente_institucion_list' %}">Expedientes e Instituciones</a>
             <a class="collapse-item" href="{% url 'auditoria:auditoria_institucion_list' %}">Instituciones</a>
             <a class="collapse-item" href="{% url 'auditoria:auditoria_internacion_list' %}">Internaciones</a>
             <a class="collapse-item" href="{% url 'auditoria:auditoria_intervencion_list' %}">Intervenciones</a>

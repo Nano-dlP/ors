@@ -212,8 +212,12 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header" style="background-color: #4a6572 !important; color: white !important;">
-          <h5 class="modal-title" id="logoutModalLabel">
-            {{ user.first_name }} {{ user.last_name }}, ¿estás listo para salir?
+          <h5 class="modal-title">
+              {% if user.first_name %}
+                  {{ user.first_name }} {{ user.last_name }}, ¿estás listo para salir?
+              {% else %}
+                  {{ user.username }}, ¿estás listo para salir?
+              {% endif %}
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
