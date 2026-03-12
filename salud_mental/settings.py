@@ -85,7 +85,7 @@ INSTALLED_APPS = [
     'internacion',
     'intervencion',
     'profesional',
-    'auditoria',
+    'auditoria.apps.AuditoriaConfig',  # registrar signals de auditoría
 
     'crum',  # para obtener el usuario actual en signals
     'ckeditor',  # editor de texto enriquecido

@@ -167,8 +167,8 @@
         </div>
       </li>
       <!-- Nav Item - Utilities Collapse Menu -->
-       
-      <li class="nav-item small-nav-item">
+      {% if staff and is_authenticated %}
+            <li class="nav-item small-nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Utilidades</span>
@@ -190,6 +190,7 @@
           </div>
         </div>
       </li>
+      {% endif %}
 
       <!-- Divider -->
       <hr class="sidebar-divider">

@@ -32,6 +32,7 @@ from .models import Profesional, AuditoriaProfesional
 
 _user = local()
 
+print("AUDITORIA SIGNALS CARGADOS")
 
 
 # Middleware-friendly setter (para capturar el usuario actual)
@@ -77,7 +78,7 @@ def registrar_login_fallido(sender, credentials, request, **kwargs):
 
 #########################EXPEDIENTE####################################
 @receiver(post_save, sender=Expediente)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_expediente_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaExpediente.objects.create(
@@ -89,7 +90,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Expediente)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_expediente_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaExpediente.objects.create(
         expediente=instance,
@@ -101,7 +102,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 #########################INSTITUCION#####################################
 @receiver(post_save, sender=Institucion)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_institucion_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaInstitucion.objects.create(
@@ -113,7 +114,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Institucion)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_institucion_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaInstitucion.objects.create(
         institucion=instance,
@@ -125,7 +126,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 ##############################INTERNACION#############################################
 @receiver(post_save, sender=Internacion)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_internacion_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaInternacion.objects.create(
@@ -137,7 +138,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(pre_delete, sender=Internacion)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_internacion_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaInternacion.objects.create(
         internacion=instance,
@@ -149,7 +150,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 #############################INTERVENCION##############################################
 @receiver(post_save, sender=Intervencion)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_intervencion_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaIntervencion.objects.create(
@@ -161,7 +162,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Intervencion)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_intervencion_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaIntervencion.objects.create(
         intervencion=instance,
@@ -173,7 +174,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 ############################PERSONA#########################################
 @receiver(post_save, sender=Persona)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_persona_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaPersona.objects.create(
@@ -185,7 +186,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Persona)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_persona_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaPersona.objects.create(
         persona=instance,
@@ -198,7 +199,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 #############################PROFESIONAL##############################################
 
 @receiver(post_save, sender=Profesional)
-def registrar_auditoria_guardado(sender, instance, created, **kwargs):
+def registrar_auditoria_profesional_guardado(sender, instance, created, **kwargs):
     usuario = get_current_user()
     accion = 'CREAR' if created else 'EDITAR'
     AuditoriaProfesional.objects.create(
@@ -211,7 +212,7 @@ def registrar_auditoria_guardado(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Profesional)
-def registrar_auditoria_eliminado(sender, instance, **kwargs):
+def registrar_auditoria_profesional_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
     AuditoriaProfesional.objects.create(
         profesional=None,
@@ -226,7 +227,7 @@ def registrar_auditoria_eliminado(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=ExpedientePersona)
-def auditoria_eliminar(sender, instance, **kwargs):
+def registrar_auditoria_expediente_persona_eliminado(sender, instance, **kwargs):
     usuario = get_current_user()
 
     AuditoriaExpedientePersona.objects.create(
@@ -248,7 +249,7 @@ def auditoria_eliminar(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=ExpedienteInstitucion)
-def auditoria_eliminar(sender, instance, **kwargs):
+def registrar_auditoria_expediente_institucion_eliminado(sender, instance, **kwargs):
 
     usuario = get_current_user()
 
