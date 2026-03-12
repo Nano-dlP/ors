@@ -128,18 +128,99 @@ MIDDLEWARE = [
 ]
 
 # Configuración de expirado de sesión (usa django-session-timeout)
-SESSION_EXPIRE_SECONDS = int(get_env('SESSION_EXPIRE_SECONDS', default=60))
+#SESSION_EXPIRE_SECONDS = int(get_env('SESSION_EXPIRE_SECONDS', default=60))
+#SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+#SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = int(get_env('SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD', default=60))
+#SESSION_TIMEOUT_REDIRECT = 'core:login'
+
+#SESSION_COOKIE_AGE = int(get_env('SESSION_COOKIE_AGE', default=3600))
+#SESSION_SAVE_EVERY_REQUEST = True
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+#IP_BLOCK_ATTEMPT_LIMIT = int(get_env('IP_BLOCK_ATTEMPT_LIMIT', default=3))
+#IP_BLOCK_ATTEMPT_WINDOW = int(get_env('IP_BLOCK_ATTEMPT_WINDOW', default=5 * 60))
+#IP_BLOCK_TIME = int(get_env('IP_BLOCK_TIME', default=60 * 15))
+
+# =========================================================
+# CONFIGURACIÓN DE SESIONES
+# =========================================================
+
+# Tiempo máximo de inactividad antes de cerrar sesión
+# (recomendado: 30 minutos en sistemas institucionales)
+SESSION_EXPIRE_SECONDS = int(get_env('SESSION_EXPIRE_SECONDS', default=1800))
+
+# Expirar sesión después de la última actividad del usuario
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = int(get_env('SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD', default=60))
+
+# Tiempo de gracia antes de redirigir (segundos)
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = int(
+    get_env('SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD', default=60)
+)
+
+# Redirección cuando expira la sesión
 SESSION_TIMEOUT_REDIRECT = 'core:login'
 
+
+# =========================================================
+# CONFIGURACIÓN DE COOKIES DE SESIÓN
+# =========================================================
+
+# Duración máxima de la cookie de sesión (1 hora)
 SESSION_COOKIE_AGE = int(get_env('SESSION_COOKIE_AGE', default=3600))
+
+# Renovar sesión en cada request
 SESSION_SAVE_EVERY_REQUEST = True
+
+# No cerrar sesión al cerrar el navegador
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+# Solo enviar cookies por HTTPS (activar en producción)
+SESSION_COOKIE_SECURE = get_env('SESSION_COOKIE_SECURE', default=False, cast=bool)
+
+# Evita acceso a cookie vía JavaScript
+SESSION_COOKIE_HTTPONLY = True
+
+# Protección contra CSRF
+CSRF_COOKIE_SECURE = get_env('CSRF_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_HTTPONLY = True
+
+# Control SameSite para prevenir CSRF
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+# =========================================================
+# PROTECCIÓN CONTRA INTENTOS DE LOGIN
+# =========================================================
+
+# Intentos máximos antes de bloquear IP
 IP_BLOCK_ATTEMPT_LIMIT = int(get_env('IP_BLOCK_ATTEMPT_LIMIT', default=3))
+
+# Ventana de tiempo para contar intentos (5 minutos)
 IP_BLOCK_ATTEMPT_WINDOW = int(get_env('IP_BLOCK_ATTEMPT_WINDOW', default=5 * 60))
+
+# Tiempo de bloqueo de IP (15 minutos)
 IP_BLOCK_TIME = int(get_env('IP_BLOCK_TIME', default=60 * 15))
+
+
+# =========================================================
+# CONFIGURACIÓN DE SEGURIDAD GENERAL
+# =========================================================
+
+# Previene ataques de clickjacking
+X_FRAME_OPTIONS = "DENY"
+
+# Fuerza cabecera de seguridad del navegador
+SECURE_BROWSER_XSS_FILTER = True
+
+# Previene sniffing de MIME
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# HSTS (solo en producción con HTTPS)
+SECURE_HSTS_SECONDS = int(get_env('SECURE_HSTS_SECONDS', default=0))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 
 raw_whitelist = get_env('IP_WHITELIST', default='127.0.0.1')
 IP_WHITELIST = [ip.strip() for ip in raw_whitelist.split(',') if ip.strip()]

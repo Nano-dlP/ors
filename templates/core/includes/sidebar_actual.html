@@ -167,7 +167,7 @@
         </div>
       </li>
       <!-- Nav Item - Utilities Collapse Menu -->
-      {% if staff and is_authenticated %}
+      {% if user.is_staff and user.is_authenticated %}
             <li class="nav-item small-nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
