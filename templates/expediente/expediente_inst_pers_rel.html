@@ -241,7 +241,7 @@
 
             <!-- Expediente Físico -->
             <div class="expediente-field">
-              <span class="expediente-field-label">Expediente Físico</span>
+              <span class="expediente-field-label">Penal</span>
               <p class="expediente-field-value">
                 <span class="badge badge-formal bg-{% if expediente.expediente_fisico %}info{% else %}secondary{% endif %}">
                   {% if expediente.expediente_fisico %}Sí{% else %}No{% endif %}
@@ -301,7 +301,7 @@
             <div class="expediente-field">
               <span class="expediente-field-label">Situación Habitacional</span>
               <p class="expediente-field-value" title="{{ expediente.situacion_habitacional_hist }}">
-                {{ expediente.situacion_habitacional_hist|default:"—" }}
+                {{ expediente.situacion_habitacional_hist|safe }}
               </p>
             </div>
           </div>
@@ -310,7 +310,7 @@
           {% if expediente.observaciones %}
           <div class="expediente-observaciones">
             <span class="expediente-field-label">Observaciones</span>
-            <p class="expediente-field-value">{{ expediente.observaciones }}</p>
+            <p class="expediente-field-value">{{ expediente.observaciones|safe  }}</p>
           </div>
           {% endif %}
         </div>

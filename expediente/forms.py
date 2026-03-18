@@ -185,7 +185,7 @@ class OficioForm(forms.Form):
     )
     expediente_fisico = forms.BooleanField(
         required=False,
-        label="  ¿Hay expediente físico?",
+        label="  Penal",
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input',
             'style': 'transform: scale(1.5); cursor: pointer; box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.5); border: 1px solid rgba(128, 128, 128, 1);',
@@ -319,7 +319,7 @@ class SecretariaForm(forms.Form):
     )
     expediente_fisico = forms.BooleanField(
         required=False,
-        label="  ¿Hay expediente físico?",
+        label="  Penal",
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input',
             'style': '',
